@@ -77,6 +77,7 @@
         flacProcessInfo.UseShellExecute = False
         flacProcess = Process.Start(flacProcessInfo)
         flacProcess.WaitForExit()
+        ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
         Return True
     End Function
 
