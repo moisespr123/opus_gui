@@ -26,7 +26,7 @@
         OutputTxt.Enabled = False
         InputBrowseBtn.Enabled = False
         OutputBrowseBtn.Enabled = False
-        BitrateTextBox.Enabled = False
+        BitrateNumberBox.Enabled = False
         Dim StartTasks As New Threading.Thread(Sub() StartThreads())
         StartTasks.Start()
     End Sub
@@ -58,7 +58,7 @@
         Task.WaitAll(tasks)
         StartBtn.BeginInvoke(Sub()
                                  StartBtn.Enabled = True
-                                 BitrateTextBox.Enabled = True
+                                 BitrateNumberBox.Enabled = True
                                  InputTxt.Enabled = True
                                  OutputTxt.Enabled = True
                                  InputBrowseBtn.Enabled = True
@@ -84,7 +84,7 @@
     End Function
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BitrateTextBox.Text = My.Settings.Bitrate
+        BitrateNumberBox.Value = My.Settings.Bitrate
         If OpusEncExists() Then
             GetOpusencVersion()
         Else
@@ -93,10 +93,6 @@
         End If
     End Sub
 
-    Private Sub BitrateTextBox_TextChanged(sender As Object, e As EventArgs) Handles BitrateTextBox.TextChanged
-        If Not String.IsNullOrEmpty(BitrateTextBox.Text) Then My.Settings.Bitrate = BitrateTextBox.Text Else My.Settings.Bitrate = 0
-        My.Settings.Save()
-    End Sub
 
     Private Sub GetOpusencVersion()
         Dim opusProcessInfo As New ProcessStartInfo
@@ -118,4 +114,9 @@
             Return False
         End If
     End Function
+
+    Private Sub NumericUpDown1_ValueChanged(sender As Object, e As EventArgs) Handles BitrateNumberBox.ValueChanged
+        My.Settings.Bitrate = BitrateNumberBox.Value
+        My.Settings.Save()
+    End Sub
 End Class
