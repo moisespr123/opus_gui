@@ -70,25 +70,52 @@
         Dim Input_File As String = args(0)
         Dim Output_File As String = args(1)
         Dim Bitrate As String = args(2)
-        Dim flacProcessInfo As New ProcessStartInfo
-        Dim flacProcess As Process
-        flacProcessInfo.FileName = "opusenc.exe"
-        flacProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
-        flacProcessInfo.CreateNoWindow = True
-        flacProcessInfo.RedirectStandardOutput = True
-        flacProcessInfo.UseShellExecute = False
-        flacProcess = Process.Start(flacProcessInfo)
-        flacProcess.WaitForExit()
+        Dim opusProcessInfo As New ProcessStartInfo
+        Dim opusProcess As Process
+        opusProcessInfo.FileName = "opusenc.exe"
+        opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+        opusProcessInfo.CreateNoWindow = True
+        opusProcessInfo.RedirectStandardOutput = True
+        opusProcessInfo.UseShellExecute = False
+        opusProcess = Process.Start(opusProcessInfo)
+        opusProcess.WaitForExit()
         ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
         Return True
     End Function
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateTextBox.Text = My.Settings.Bitrate
+        If OpusEncExists() Then
+            GetOpusencVersion()
+        Else
+            MessageBox.Show("opusenc.exe was not found. Exiting...")
+            Me.Close()
+        End If
     End Sub
 
     Private Sub BitrateTextBox_TextChanged(sender As Object, e As EventArgs) Handles BitrateTextBox.TextChanged
-        My.Settings.Bitrate = BitrateTextBox.Text
+        If Not String.IsNullOrEmpty(BitrateTextBox.Text) Then My.Settings.Bitrate = BitrateTextBox.Text Else My.Settings.Bitrate = 0
         My.Settings.Save()
     End Sub
+
+    Private Sub GetOpusencVersion()
+        Dim opusProcessInfo As New ProcessStartInfo
+        Dim opusProcess As Process
+        opusProcessInfo.FileName = "opusenc.exe"
+        opusProcessInfo.Arguments = "-V"
+        opusProcessInfo.CreateNoWindow = True
+        opusProcessInfo.RedirectStandardOutput = True
+        opusProcessInfo.UseShellExecute = False
+        opusProcess = Process.Start(opusProcessInfo)
+        opusProcess.WaitForExit()
+        OpusVersionLabel.Text = "opusenc version: " + opusProcess.StandardOutput.ReadLine()
+    End Sub
+
+    Private Function OpusEncExists() As Boolean
+        If My.Computer.FileSystem.FileExists("opusenc.exe") Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
 End Class

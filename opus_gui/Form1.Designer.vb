@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Form1
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class Form1
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -35,6 +35,7 @@ Partial Class Form1
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.BitrateTextBox = New System.Windows.Forms.TextBox()
+        Me.OpusVersionLabel = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Label1
@@ -134,7 +135,7 @@ Partial Class Form1
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 201)
+        Me.Label5.Location = New System.Drawing.Point(12, 221)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(119, 13)
         Me.Label5.TabIndex = 11
@@ -144,11 +145,11 @@ Partial Class Form1
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(681, 201)
+        Me.Label6.Location = New System.Drawing.Point(681, 221)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.0"
+        Me.Label6.Text = "v1.1"
         '
         'BitrateTextBox
         '
@@ -159,11 +160,21 @@ Partial Class Form1
         Me.BitrateTextBox.Size = New System.Drawing.Size(484, 20)
         Me.BitrateTextBox.TabIndex = 13
         '
+        'OpusVersionLabel
+        '
+        Me.OpusVersionLabel.AutoSize = True
+        Me.OpusVersionLabel.Location = New System.Drawing.Point(12, 199)
+        Me.OpusVersionLabel.Name = "OpusVersionLabel"
+        Me.OpusVersionLabel.Size = New System.Drawing.Size(88, 13)
+        Me.OpusVersionLabel.TabIndex = 14
+        Me.OpusVersionLabel.Text = "opusenc version:"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(721, 224)
+        Me.ClientSize = New System.Drawing.Size(721, 243)
+        Me.Controls.Add(Me.OpusVersionLabel)
         Me.Controls.Add(Me.BitrateTextBox)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label5)
@@ -198,4 +209,5 @@ Partial Class Form1
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents BitrateTextBox As TextBox
+    Friend WithEvents OpusVersionLabel As Label
 End Class
