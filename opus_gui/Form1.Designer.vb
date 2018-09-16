@@ -36,6 +36,7 @@ Partial Class Form1
         Me.Label6 = New System.Windows.Forms.Label()
         Me.OpusVersionLabel = New System.Windows.Forms.Label()
         Me.BitrateNumberBox = New System.Windows.Forms.NumericUpDown()
+        Me.enableMultithreading = New System.Windows.Forms.CheckBox()
         CType(Me.BitrateNumberBox,System.ComponentModel.ISupportInitialize).BeginInit
         Me.SuspendLayout
         '
@@ -150,7 +151,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.2"
+        Me.Label6.Text = "v1.3"
         '
         'OpusVersionLabel
         '
@@ -167,14 +168,26 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 118)
         Me.BitrateNumberBox.Name = "BitrateNumberBox"
-        Me.BitrateNumberBox.Size = New System.Drawing.Size(484, 20)
+        Me.BitrateNumberBox.Size = New System.Drawing.Size(357, 20)
         Me.BitrateNumberBox.TabIndex = 15
+        '
+        'enableMultithreading
+        '
+        Me.enableMultithreading.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.enableMultithreading.AutoSize = true
+        Me.enableMultithreading.Location = New System.Drawing.Point(378, 121)
+        Me.enableMultithreading.Name = "enableMultithreading"
+        Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
+        Me.enableMultithreading.TabIndex = 16
+        Me.enableMultithreading.Text = "Use Multi-Threading"
+        Me.enableMultithreading.UseVisualStyleBackColor = true
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(721, 243)
+        Me.Controls.Add(Me.enableMultithreading)
         Me.Controls.Add(Me.BitrateNumberBox)
         Me.Controls.Add(Me.OpusVersionLabel)
         Me.Controls.Add(Me.Label6)
@@ -212,4 +225,5 @@ End Sub
     Friend WithEvents Label6 As Label
     Friend WithEvents OpusVersionLabel As Label
     Friend WithEvents BitrateNumberBox As NumericUpDown
+    Friend WithEvents enableMultithreading As CheckBox
 End Class

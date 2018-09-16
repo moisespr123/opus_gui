@@ -65,6 +65,18 @@ Namespace My
                 Me("Bitrate") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property Multithreading() As Boolean
+            Get
+                Return CType(Me("Multithreading"),Boolean)
+            End Get
+            Set
+                Me("Multithreading") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

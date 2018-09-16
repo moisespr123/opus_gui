@@ -27,11 +27,12 @@
         InputBrowseBtn.Enabled = False
         OutputBrowseBtn.Enabled = False
         BitrateNumberBox.Enabled = False
+        enableMultithreading.Enabled = False
         Dim StartTasks As New Threading.Thread(Sub() StartThreads())
         StartTasks.Start()
     End Sub
     Private Sub StartThreads()
-        If Not My.Computer.FileSystem.DirectoryExists(OutputTxt.Text) Then My.Computer.FileSystem.CreateDirectory(OutputTxt.Text)
+        If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not My.Computer.FileSystem.DirectoryExists(OutputTxt.Text) Then My.Computer.FileSystem.CreateDirectory(OutputTxt.Text)
         Dim ItemsToProcess As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
@@ -39,8 +40,10 @@
             If IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" Then
                 ItemsToProcess.Add(File)
             Else
-                If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
-                    If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                    If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
+                        If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                    End If
                 End If
             End If
         Next
@@ -50,15 +53,29 @@
                                  End Sub
         )
         Dim tasks = New Task(ItemsToProcess.Count - 1) {}
-        For Counter As Integer = 0 To ItemsToProcess.Count - 1
-            Dim args As Array = {ItemsToProcess(Counter), OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus", My.Settings.Bitrate}
-            tasks(Counter) = Task.Factory.StartNew(Function() Run_opus(args))
-
-        Next
-        Task.WaitAll(tasks)
+        Dim outputPath As String = ""
+        If enableMultithreading.Checked Then
+            For Counter As Integer = 0 To ItemsToProcess.Count - 1
+                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                    outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
+                End If
+                Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
+                tasks(Counter) = Task.Factory.StartNew(Function() Run_opus(args))
+            Next
+            Task.WaitAll(tasks)
+        Else
+            For Counter As Integer = 0 To ItemsToProcess.Count - 1
+                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                    outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
+                End If
+                Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
+                Run_opus(args)
+            Next
+        End If
         StartBtn.BeginInvoke(Sub()
                                  StartBtn.Enabled = True
                                  BitrateNumberBox.Enabled = True
+                                 enableMultithreading.Enabled = True
                                  InputTxt.Enabled = True
                                  OutputTxt.Enabled = True
                                  InputBrowseBtn.Enabled = True
@@ -73,9 +90,13 @@
         Dim opusProcessInfo As New ProcessStartInfo
         Dim opusProcess As Process
         opusProcessInfo.FileName = "opusenc.exe"
-        opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+        If Not String.IsNullOrEmpty(Output_File) Then
+            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+        Else
+            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
+        End If
         opusProcessInfo.CreateNoWindow = True
-        opusProcessInfo.RedirectStandardOutput = True
+        opusProcessInfo.RedirectStandardOutput = False
         opusProcessInfo.UseShellExecute = False
         opusProcess = Process.Start(opusProcessInfo)
         opusProcess.WaitForExit()
@@ -85,6 +106,7 @@
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateNumberBox.Value = My.Settings.Bitrate
+        enableMultithreading.Checked = My.Settings.Multithreading
         If OpusEncExists() Then
             GetOpusencVersion()
         Else
@@ -117,6 +139,11 @@
 
     Private Sub NumericUpDown1_ValueChanged(sender As Object, e As EventArgs) Handles BitrateNumberBox.ValueChanged
         My.Settings.Bitrate = BitrateNumberBox.Value
+        My.Settings.Save()
+    End Sub
+
+    Private Sub EnableMultithreading_CheckedChanged(sender As Object, e As EventArgs) Handles enableMultithreading.CheckedChanged
+        My.Settings.Multithreading = enableMultithreading.Checked
         My.Settings.Save()
     End Sub
 End Class
