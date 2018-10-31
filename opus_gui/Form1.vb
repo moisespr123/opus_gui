@@ -52,7 +52,7 @@
                                      ProgressBar1.Value = 0
                                  End Sub
         )
-        Dim tasks = New Task(ItemsToProcess.Count - 1) {}
+        Dim tasks = New List(Of Action)
         Dim outputPath As String = ""
         If enableMultithreading.Checked Then
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
@@ -60,9 +60,9 @@
                     outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
                 End If
                 Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
-                tasks(Counter) = Task.Factory.StartNew(Function() Run_opus(args))
+                tasks.Add(Function() Run_opus(args))
             Next
-            Task.WaitAll(tasks)
+            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = Environment.ProcessorCount}, tasks.ToArray())
         Else
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
                 If Not String.IsNullOrEmpty(OutputTxt.Text) Then
