@@ -64,7 +64,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.InputTxt.Location = New System.Drawing.Point(15, 26)
         Me.InputTxt.Name = "InputTxt"
-        Me.InputTxt.Size = New System.Drawing.Size(613, 20)
+        Me.InputTxt.Size = New System.Drawing.Size(391, 20)
         Me.InputTxt.TabIndex = 2
         '
         'OutputTxt
@@ -73,7 +73,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.OutputTxt.Location = New System.Drawing.Point(15, 68)
         Me.OutputTxt.Name = "OutputTxt"
-        Me.OutputTxt.Size = New System.Drawing.Size(613, 20)
+        Me.OutputTxt.Size = New System.Drawing.Size(391, 20)
         Me.OutputTxt.TabIndex = 3
         '
         'Label3
@@ -88,7 +88,7 @@ Partial Class Form1
         'InputBrowseBtn
         '
         Me.InputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.InputBrowseBtn.Location = New System.Drawing.Point(634, 24)
+        Me.InputBrowseBtn.Location = New System.Drawing.Point(412, 24)
         Me.InputBrowseBtn.Name = "InputBrowseBtn"
         Me.InputBrowseBtn.Size = New System.Drawing.Size(75, 23)
         Me.InputBrowseBtn.TabIndex = 5
@@ -98,7 +98,7 @@ Partial Class Form1
         'OutputBrowseBtn
         '
         Me.OutputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.OutputBrowseBtn.Location = New System.Drawing.Point(634, 68)
+        Me.OutputBrowseBtn.Location = New System.Drawing.Point(412, 68)
         Me.OutputBrowseBtn.Name = "OutputBrowseBtn"
         Me.OutputBrowseBtn.Size = New System.Drawing.Size(75, 23)
         Me.OutputBrowseBtn.TabIndex = 6
@@ -108,7 +108,7 @@ Partial Class Form1
         'StartBtn
         '
         Me.StartBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.StartBtn.Location = New System.Drawing.Point(505, 101)
+        Me.StartBtn.Location = New System.Drawing.Point(283, 101)
         Me.StartBtn.Name = "StartBtn"
         Me.StartBtn.Size = New System.Drawing.Size(204, 37)
         Me.StartBtn.TabIndex = 8
@@ -130,7 +130,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ProgressBar1.Location = New System.Drawing.Point(15, 165)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(694, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(472, 23)
         Me.ProgressBar1.Step = 1
         Me.ProgressBar1.TabIndex = 10
         '
@@ -147,7 +147,7 @@ Partial Class Form1
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(681, 221)
+        Me.Label6.Location = New System.Drawing.Point(459, 221)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
@@ -168,14 +168,14 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 118)
         Me.BitrateNumberBox.Name = "BitrateNumberBox"
-        Me.BitrateNumberBox.Size = New System.Drawing.Size(357, 20)
+        Me.BitrateNumberBox.Size = New System.Drawing.Size(135, 20)
         Me.BitrateNumberBox.TabIndex = 15
         '
         'enableMultithreading
         '
         Me.enableMultithreading.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.enableMultithreading.AutoSize = true
-        Me.enableMultithreading.Location = New System.Drawing.Point(378, 121)
+        Me.enableMultithreading.Location = New System.Drawing.Point(156, 121)
         Me.enableMultithreading.Name = "enableMultithreading"
         Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
         Me.enableMultithreading.TabIndex = 16
@@ -186,7 +186,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(721, 243)
+        Me.ClientSize = New System.Drawing.Size(499, 243)
         Me.Controls.Add(Me.enableMultithreading)
         Me.Controls.Add(Me.BitrateNumberBox)
         Me.Controls.Add(Me.OpusVersionLabel)
