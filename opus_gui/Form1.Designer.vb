@@ -167,6 +167,7 @@ Partial Class Form1
         Me.BitrateNumberBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
             Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 118)
+        Me.BitrateNumberBox.Maximum = New Decimal(New Integer() {320, 0, 0, 0})
         Me.BitrateNumberBox.Name = "BitrateNumberBox"
         Me.BitrateNumberBox.Size = New System.Drawing.Size(135, 20)
         Me.BitrateNumberBox.TabIndex = 15
