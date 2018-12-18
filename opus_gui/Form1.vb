@@ -34,11 +34,16 @@
     Private Sub StartThreads()
         If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not My.Computer.FileSystem.DirectoryExists(OutputTxt.Text) Then My.Computer.FileSystem.CreateDirectory(OutputTxt.Text)
         Dim ItemsToProcess As List(Of String) = New List(Of String)
+        Dim ItemsToDelete As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         For Each File In IO.Directory.GetFiles(InputTxt.Text)
             If IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" Then
                 ItemsToProcess.Add(File)
+            ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" Then
+                ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
+                ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
             Else
                 If Not String.IsNullOrEmpty(OutputTxt.Text) Then
                     If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
@@ -72,6 +77,11 @@
                 Run_opus(args)
             Next
         End If
+        If ItemsToDelete.Count > 0 Then
+            For Each item As String In ItemsToDelete
+                My.Computer.FileSystem.DeleteFile(item)
+            Next
+        End If
         StartBtn.BeginInvoke(Sub()
                                  StartBtn.Enabled = True
                                  BitrateNumberBox.Enabled = True
@@ -101,6 +111,18 @@
         opusProcess = Process.Start(opusProcessInfo)
         opusProcess.WaitForExit()
         ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
+        Return True
+    End Function
+    Private Function ffmpeg_preprocess(Input As String, Output As String)
+        Dim ffmpegProcessInfo As New ProcessStartInfo
+        Dim ffmpegProcess As Process
+        ffmpegProcessInfo.FileName = "ffmpeg.exe"
+        ffmpegProcessInfo.Arguments = "-i """ + Input + """ -map_metadata 0 """ + Output + ".flac"" -y"
+        ffmpegProcessInfo.CreateNoWindow = True
+        ffmpegProcessInfo.RedirectStandardOutput = False
+        ffmpegProcessInfo.UseShellExecute = False
+        ffmpegProcess = Process.Start(ffmpegProcessInfo)
+        ffmpegProcess.WaitForExit()
         Return True
     End Function
 
