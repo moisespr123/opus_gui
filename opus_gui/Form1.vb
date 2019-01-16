@@ -1,5 +1,4 @@
 ﻿Public Class Form1
-
     Private Sub InputBrowseBtn_Click(sender As Object, e As EventArgs) Handles InputBrowseBtn.Click
         Dim InputBrowser As New FolderBrowserDialog With {
             .ShowNewFolderButton = False
@@ -167,5 +166,13 @@
     Private Sub EnableMultithreading_CheckedChanged(sender As Object, e As EventArgs) Handles enableMultithreading.CheckedChanged
         My.Settings.Multithreading = enableMultithreading.Checked
         My.Settings.Save()
+    End Sub
+    Private Sub Form1_DragEnter(sender As Object, e As DragEventArgs) Handles MyBase.DragEnter
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            e.Effect = DragDropEffects.Copy
+        End If
+    End Sub
+    Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
+        InputTxt.Text = CType(e.Data.GetData(DataFormats.FileDrop), String())(0)
     End Sub
 End Class

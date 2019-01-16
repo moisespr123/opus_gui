@@ -181,11 +181,12 @@ Partial Class Form1
         Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
         Me.enableMultithreading.TabIndex = 16
         Me.enableMultithreading.Text = "Use Multi-Threading"
-        Me.enableMultithreading.UseVisualStyleBackColor = true
+        Me.enableMultithreading.UseVisualStyleBackColor = True
         '
         'Form1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+        Me.AllowDrop = True
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(499, 243)
         Me.Controls.Add(Me.enableMultithreading)
