@@ -128,11 +128,16 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateNumberBox.Value = My.Settings.Bitrate
         enableMultithreading.Checked = My.Settings.Multithreading
+        IO.Directory.SetCurrentDirectory(IO.Path.GetDirectoryName(Process.GetCurrentProcess.MainModule.FileName))
         If OpusEncExists() Then
             GetOpusencVersion()
         Else
             MessageBox.Show("opusenc.exe was not found. Exiting...")
             Me.Close()
+        End If
+        Dim vars As String() = Environment.GetCommandLineArgs
+        If vars.Count > 1 Then
+            InputTxt.Text = vars(1)
         End If
     End Sub
 

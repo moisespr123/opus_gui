@@ -151,11 +151,11 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.4"
+        Me.Label6.Text = "v1.5"
         '
         'OpusVersionLabel
         '
-        Me.OpusVersionLabel.AutoSize = true
+        Me.OpusVersionLabel.AutoSize = True
         Me.OpusVersionLabel.Location = New System.Drawing.Point(12, 199)
         Me.OpusVersionLabel.Name = "OpusVersionLabel"
         Me.OpusVersionLabel.Size = New System.Drawing.Size(88, 13)
@@ -164,8 +164,8 @@ Partial Class Form1
         '
         'BitrateNumberBox
         '
-        Me.BitrateNumberBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.BitrateNumberBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 118)
         Me.BitrateNumberBox.Maximum = New Decimal(New Integer() {320, 0, 0, 0})
         Me.BitrateNumberBox.Name = "BitrateNumberBox"
@@ -174,8 +174,8 @@ Partial Class Form1
         '
         'enableMultithreading
         '
-        Me.enableMultithreading.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.enableMultithreading.AutoSize = true
+        Me.enableMultithreading.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.enableMultithreading.AutoSize = True
         Me.enableMultithreading.Location = New System.Drawing.Point(156, 121)
         Me.enableMultithreading.Name = "enableMultithreading"
         Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
