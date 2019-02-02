@@ -37,13 +37,17 @@ Partial Class Form1
         Me.OpusVersionLabel = New System.Windows.Forms.Label()
         Me.BitrateNumberBox = New System.Windows.Forms.NumericUpDown()
         Me.enableMultithreading = New System.Windows.Forms.CheckBox()
-        CType(Me.BitrateNumberBox,System.ComponentModel.ISupportInitialize).BeginInit
-        Me.SuspendLayout
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.EncOpusenc = New System.Windows.Forms.RadioButton()
+        Me.EncFfmpeg = New System.Windows.Forms.RadioButton()
+        CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox1.SuspendLayout()
+        Me.SuspendLayout()
         '
         'Label1
         '
-        Me.Label1.AutoSize = true
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(9, 64)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(327, 13)
         Me.Label1.TabIndex = 0
@@ -51,8 +55,8 @@ Partial Class Form1
         '
         'Label2
         '
-        Me.Label2.AutoSize = true
-        Me.Label2.Location = New System.Drawing.Point(12, 52)
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(9, 107)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(268, 13)
         Me.Label2.TabIndex = 1
@@ -60,26 +64,26 @@ Partial Class Form1
         '
         'InputTxt
         '
-        Me.InputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.InputTxt.Location = New System.Drawing.Point(15, 26)
+        Me.InputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputTxt.Location = New System.Drawing.Point(12, 81)
         Me.InputTxt.Name = "InputTxt"
         Me.InputTxt.Size = New System.Drawing.Size(391, 20)
         Me.InputTxt.TabIndex = 2
         '
         'OutputTxt
         '
-        Me.OutputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.OutputTxt.Location = New System.Drawing.Point(15, 68)
+        Me.OutputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OutputTxt.Location = New System.Drawing.Point(12, 123)
         Me.OutputTxt.Name = "OutputTxt"
         Me.OutputTxt.Size = New System.Drawing.Size(391, 20)
         Me.OutputTxt.TabIndex = 3
         '
         'Label3
         '
-        Me.Label3.AutoSize = true
-        Me.Label3.Location = New System.Drawing.Point(12, 101)
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(12, 152)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(40, 13)
         Me.Label3.TabIndex = 4
@@ -87,38 +91,38 @@ Partial Class Form1
         '
         'InputBrowseBtn
         '
-        Me.InputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.InputBrowseBtn.Location = New System.Drawing.Point(412, 24)
+        Me.InputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputBrowseBtn.Location = New System.Drawing.Point(409, 79)
         Me.InputBrowseBtn.Name = "InputBrowseBtn"
         Me.InputBrowseBtn.Size = New System.Drawing.Size(75, 23)
         Me.InputBrowseBtn.TabIndex = 5
         Me.InputBrowseBtn.Text = "Browse"
-        Me.InputBrowseBtn.UseVisualStyleBackColor = true
+        Me.InputBrowseBtn.UseVisualStyleBackColor = True
         '
         'OutputBrowseBtn
         '
-        Me.OutputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.OutputBrowseBtn.Location = New System.Drawing.Point(412, 68)
+        Me.OutputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OutputBrowseBtn.Location = New System.Drawing.Point(409, 123)
         Me.OutputBrowseBtn.Name = "OutputBrowseBtn"
         Me.OutputBrowseBtn.Size = New System.Drawing.Size(75, 23)
         Me.OutputBrowseBtn.TabIndex = 6
         Me.OutputBrowseBtn.Text = "Browse"
-        Me.OutputBrowseBtn.UseVisualStyleBackColor = true
+        Me.OutputBrowseBtn.UseVisualStyleBackColor = True
         '
         'StartBtn
         '
-        Me.StartBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.StartBtn.Location = New System.Drawing.Point(283, 101)
+        Me.StartBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.StartBtn.Location = New System.Drawing.Point(283, 152)
         Me.StartBtn.Name = "StartBtn"
         Me.StartBtn.Size = New System.Drawing.Size(204, 37)
         Me.StartBtn.TabIndex = 8
         Me.StartBtn.Text = "Start"
-        Me.StartBtn.UseVisualStyleBackColor = true
+        Me.StartBtn.UseVisualStyleBackColor = True
         '
         'Label4
         '
-        Me.Label4.AutoSize = true
-        Me.Label4.Location = New System.Drawing.Point(12, 148)
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(12, 199)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(51, 13)
         Me.Label4.TabIndex = 9
@@ -126,9 +130,9 @@ Partial Class Form1
         '
         'ProgressBar1
         '
-        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
-            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.ProgressBar1.Location = New System.Drawing.Point(15, 165)
+        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Location = New System.Drawing.Point(15, 216)
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(472, 23)
         Me.ProgressBar1.Step = 1
@@ -136,8 +140,8 @@ Partial Class Form1
         '
         'Label5
         '
-        Me.Label5.AutoSize = true
-        Me.Label5.Location = New System.Drawing.Point(12, 221)
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(12, 272)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(119, 13)
         Me.Label5.TabIndex = 11
@@ -145,18 +149,18 @@ Partial Class Form1
         '
         'Label6
         '
-        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
-        Me.Label6.AutoSize = true
-        Me.Label6.Location = New System.Drawing.Point(459, 221)
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(459, 272)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.5"
+        Me.Label6.Text = "v1.6"
         '
         'OpusVersionLabel
         '
         Me.OpusVersionLabel.AutoSize = True
-        Me.OpusVersionLabel.Location = New System.Drawing.Point(12, 199)
+        Me.OpusVersionLabel.Location = New System.Drawing.Point(12, 250)
         Me.OpusVersionLabel.Name = "OpusVersionLabel"
         Me.OpusVersionLabel.Size = New System.Drawing.Size(88, 13)
         Me.OpusVersionLabel.TabIndex = 14
@@ -166,7 +170,7 @@ Partial Class Form1
         '
         Me.BitrateNumberBox.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 118)
+        Me.BitrateNumberBox.Location = New System.Drawing.Point(15, 169)
         Me.BitrateNumberBox.Maximum = New Decimal(New Integer() {320, 0, 0, 0})
         Me.BitrateNumberBox.Name = "BitrateNumberBox"
         Me.BitrateNumberBox.Size = New System.Drawing.Size(135, 20)
@@ -176,19 +180,53 @@ Partial Class Form1
         '
         Me.enableMultithreading.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.enableMultithreading.AutoSize = True
-        Me.enableMultithreading.Location = New System.Drawing.Point(156, 121)
+        Me.enableMultithreading.Location = New System.Drawing.Point(156, 172)
         Me.enableMultithreading.Name = "enableMultithreading"
         Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
         Me.enableMultithreading.TabIndex = 16
         Me.enableMultithreading.Text = "Use Multi-Threading"
         Me.enableMultithreading.UseVisualStyleBackColor = True
         '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.EncFfmpeg)
+        Me.GroupBox1.Controls.Add(Me.EncOpusenc)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 12)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(151, 48)
+        Me.GroupBox1.TabIndex = 17
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Encoder: "
+        '
+        'EncOpusenc
+        '
+        Me.EncOpusenc.AutoSize = True
+        Me.EncOpusenc.Location = New System.Drawing.Point(6, 19)
+        Me.EncOpusenc.Name = "EncOpusenc"
+        Me.EncOpusenc.Size = New System.Drawing.Size(66, 17)
+        Me.EncOpusenc.TabIndex = 0
+        Me.EncOpusenc.TabStop = True
+        Me.EncOpusenc.Text = "opusenc"
+        Me.EncOpusenc.UseVisualStyleBackColor = True
+        '
+        'EncFfmpeg
+        '
+        Me.EncFfmpeg.AutoSize = True
+        Me.EncFfmpeg.Location = New System.Drawing.Point(81, 19)
+        Me.EncFfmpeg.Name = "EncFfmpeg"
+        Me.EncFfmpeg.Size = New System.Drawing.Size(57, 17)
+        Me.EncFfmpeg.TabIndex = 1
+        Me.EncFfmpeg.TabStop = True
+        Me.EncFfmpeg.Text = "ffmpeg"
+        Me.EncFfmpeg.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(499, 243)
+        Me.ClientSize = New System.Drawing.Size(499, 298)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.enableMultithreading)
         Me.Controls.Add(Me.BitrateNumberBox)
         Me.Controls.Add(Me.OpusVersionLabel)
@@ -204,11 +242,13 @@ Partial Class Form1
         Me.Controls.Add(Me.InputTxt)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
-        Me.MaximizeBox = false
+        Me.MaximizeBox = False
         Me.Name = "Form1"
         Me.Text = "Opus GUI"
-        CType(Me.BitrateNumberBox,System.ComponentModel.ISupportInitialize).EndInit
-        Me.ResumeLayout(false)
+        CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
+        Me.ResumeLayout(False)
         Me.PerformLayout
 
 End Sub
@@ -228,4 +268,7 @@ End Sub
     Friend WithEvents OpusVersionLabel As Label
     Friend WithEvents BitrateNumberBox As NumericUpDown
     Friend WithEvents enableMultithreading As CheckBox
+    Friend WithEvents GroupBox1 As GroupBox
+    Friend WithEvents EncFfmpeg As RadioButton
+    Friend WithEvents EncOpusenc As RadioButton
 End Class

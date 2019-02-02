@@ -37,9 +37,9 @@
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         For Each File In IO.Directory.GetFiles(InputTxt.Text)
-            If IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" Then
+            If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
                 ItemsToProcess.Add(File)
-            ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" Then
+            ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
                 ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
                 ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
                 ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
@@ -64,7 +64,11 @@
                     outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
                 End If
                 Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
-                tasks.Add(Function() Run_opus(args))
+                If EncOpusenc.Checked Then
+                    tasks.Add(Function() Run_opus(args, "opusenc"))
+                Else
+                    tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                End If
             Next
             Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = Environment.ProcessorCount}, tasks.ToArray())
         Else
@@ -73,7 +77,11 @@
                     outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
                 End If
                 Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
-                Run_opus(args)
+                If EncOpusenc.Checked Then
+                    tasks.Add(Function() Run_opus(args, "opusenc"))
+                Else
+                    tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                End If
             Next
         End If
         If ItemsToDelete.Count > 0 Then
@@ -92,17 +100,25 @@
                              End Sub)
         MsgBox("Finished")
     End Sub
-    Private Function Run_opus(args As Array)
+    Private Function Run_opus(args As Array, encoder As String)
         Dim Input_File As String = args(0)
         Dim Output_File As String = args(1)
         Dim Bitrate As String = args(2)
         Dim opusProcessInfo As New ProcessStartInfo
         Dim opusProcess As Process
-        opusProcessInfo.FileName = "opusenc.exe"
-        If Not String.IsNullOrEmpty(Output_File) Then
-            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+        opusProcessInfo.FileName = encoder + ".exe"
+        If encoder = "opusenc" Then
+            If Not String.IsNullOrEmpty(Output_File) Then
+                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+            Else
+                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
+            End If
         Else
-            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
+            If Not String.IsNullOrEmpty(Output_File) Then
+                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Output_File + """"
+            Else
+                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Input_File + ".opus"""
+            End If
         End If
         opusProcessInfo.CreateNoWindow = True
         opusProcessInfo.RedirectStandardOutput = False
@@ -116,7 +132,7 @@
         Dim ffmpegProcessInfo As New ProcessStartInfo
         Dim ffmpegProcess As Process
         ffmpegProcessInfo.FileName = "ffmpeg.exe"
-        ffmpegProcessInfo.Arguments = "-i """ + Input + """ -map_metadata 0 """ + Output + ".flac"" -y"
+        ffmpegProcessInfo.Arguments = "-i """ + Input + """ -c:a flac """ + Output + ".flac"" -y"
         ffmpegProcessInfo.CreateNoWindow = True
         ffmpegProcessInfo.RedirectStandardOutput = False
         ffmpegProcessInfo.UseShellExecute = False
@@ -128,6 +144,9 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateNumberBox.Value = My.Settings.Bitrate
         enableMultithreading.Checked = My.Settings.Multithreading
+        EncFfmpeg.Checked = My.Settings.EncFfmpeg
+        EncOpusenc.Checked = My.Settings.EncOpusenc
+        If Not EncFfmpeg.Checked And Not EncOpusenc.Checked Then EncOpusenc.Checked = True
         IO.Directory.SetCurrentDirectory(IO.Path.GetDirectoryName(Process.GetCurrentProcess.MainModule.FileName))
         If OpusEncExists() Then
             GetOpusencVersion()
@@ -179,5 +198,13 @@
     End Sub
     Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
         InputTxt.Text = CType(e.Data.GetData(DataFormats.FileDrop), String())(0)
+    End Sub
+
+    Private Sub EncOpusenc_CheckedChanged(sender As Object, e As EventArgs) Handles EncOpusenc.CheckedChanged
+        My.Settings.EncOpusenc = EncOpusenc.Checked
+    End Sub
+
+    Private Sub EncFfmpeg_CheckedChanged(sender As Object, e As EventArgs) Handles EncFfmpeg.CheckedChanged
+        My.Settings.EncFfmpeg = EncFfmpeg.Checked
     End Sub
 End Class

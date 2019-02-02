@@ -1,0 +1,5 @@
+image: Visual Studio 2017
+configuration: Release
+
+artifacts:
+ - path: opus_gui\bin\Release\opus_gui.exe
