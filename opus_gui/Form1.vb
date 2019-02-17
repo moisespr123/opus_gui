@@ -36,21 +36,25 @@
         Dim ItemsToDelete As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
-        For Each File In IO.Directory.GetFiles(InputTxt.Text)
-            If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
-                ItemsToProcess.Add(File)
-            ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
-                ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
-                ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
-                ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
-            Else
-                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
-                    If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
-                        If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+        If IO.Directory.Exists(InputTxt.Text) Then
+            For Each File In IO.Directory.GetFiles(InputTxt.Text)
+                If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
+                    ItemsToProcess.Add(File)
+                ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
+                    ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
+                    ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                    ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                Else
+                    If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                        If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
+                            If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                        End If
                     End If
                 End If
-            End If
-        Next
+            Next
+        Else
+            ItemsToProcess.Add(InputTxt.Text)
+        End If
         ProgressBar1.BeginInvoke(Sub()
                                      ProgressBar1.Maximum = ItemsToProcess.Count
                                      ProgressBar1.Value = 0
@@ -206,5 +210,16 @@
 
     Private Sub EncFfmpeg_CheckedChanged(sender As Object, e As EventArgs) Handles EncFfmpeg.CheckedChanged
         My.Settings.EncFfmpeg = EncFfmpeg.Checked
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim InputBrowser As New OpenFileDialog With {
+          .Title = "Browse for a music file:",
+          .FileName = ""
+      }
+        Dim OkAction As MsgBoxResult = InputBrowser.ShowDialog
+        If OkAction = MsgBoxResult.Ok Then
+            InputTxt.Text = InputBrowser.FileName
+        End If
     End Sub
 End Class
