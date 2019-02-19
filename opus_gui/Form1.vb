@@ -115,13 +115,16 @@
             If Not String.IsNullOrEmpty(Output_File) Then
                 opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
             Else
-                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
+                Dim FileWithoutExtension As String = IO.Path.GetDirectoryName(Input_File) + "\" + IO.Path.GetFileNameWithoutExtension(Input_File)
+                If Not IO.File.Exists(FileWithoutExtension + ".opus") Then
+                    opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
+                End If
             End If
         Else
             If Not String.IsNullOrEmpty(Output_File) Then
                 opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Output_File + """"
             Else
-                Dim FileWithoutExtension As String = IO.Path.GetFileNameWithoutExtension(Input_File)
+                Dim FileWithoutExtension As String = IO.Path.GetDirectoryName(Input_File) + "\" + IO.Path.GetFileNameWithoutExtension(Input_File)
                 If Not IO.File.Exists(FileWithoutExtension + ".opus") Then
                     opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + FileWithoutExtension + ".opus"""
                 Else
@@ -129,6 +132,7 @@
                 End If
             End If
         End If
+        opusProcessInfo.WorkingDirectory = IO.Path.GetDirectoryName(Input_File)
         opusProcessInfo.CreateNoWindow = True
         opusProcessInfo.RedirectStandardOutput = False
         opusProcessInfo.UseShellExecute = False
