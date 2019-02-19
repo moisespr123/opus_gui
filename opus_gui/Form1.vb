@@ -82,9 +82,9 @@
                 End If
                 Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
                 If EncOpusenc.Checked Then
-                    tasks.Add(Function() Run_opus(args, "opusenc"))
+                    Run_opus(args, "opusenc")
                 Else
-                    tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                    Run_opus(args, "ffmpeg")
                 End If
             Next
         End If
@@ -121,7 +121,12 @@
             If Not String.IsNullOrEmpty(Output_File) Then
                 opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Output_File + """"
             Else
-                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Input_File + ".opus"""
+                Dim FileWithoutExtension As String = IO.Path.GetFileNameWithoutExtension(Input_File)
+                If Not IO.File.Exists(FileWithoutExtension + ".opus") Then
+                    opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + FileWithoutExtension + ".opus"""
+                Else
+                    Return False
+                End If
             End If
         End If
         opusProcessInfo.CreateNoWindow = True
