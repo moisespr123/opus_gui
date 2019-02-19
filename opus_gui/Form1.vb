@@ -30,10 +30,21 @@
         Dim StartTasks As New Threading.Thread(Sub() StartThreads())
         StartTasks.Start()
     End Sub
+
+    Private Function GetOutputPath(OutputFolder As String, Item As String) As String
+        Dim outputPath As String = String.Empty
+        If Not String.IsNullOrEmpty(OutputFolder) Then
+            outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(Item) + ".opus"
+        Else
+            outputPath = IO.Path.GetDirectoryName(Item) + "\" + IO.Path.GetFileNameWithoutExtension(Item) + ".opus"
+        End If
+        Return outputPath
+    End Function
     Private Sub StartThreads()
         If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not My.Computer.FileSystem.DirectoryExists(OutputTxt.Text) Then My.Computer.FileSystem.CreateDirectory(OutputTxt.Text)
         Dim ItemsToProcess As List(Of String) = New List(Of String)
         Dim ItemsToDelete As List(Of String) = New List(Of String)
+        Dim FileAlreadyExist As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         If IO.Directory.Exists(InputTxt.Text) Then
@@ -61,30 +72,31 @@
                                  End Sub
         )
         Dim tasks = New List(Of Action)
-        Dim outputPath As String = ""
         If enableMultithreading.Checked Then
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
-                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
-                    outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
-                End If
-                Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
-                If EncOpusenc.Checked Then
-                    tasks.Add(Function() Run_opus(args, "opusenc"))
+                Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
+                If Not IO.File.Exists(args(1)) Then
+                    If EncOpusenc.Checked Then
+                        tasks.Add(Function() Run_opus(args, "opusenc"))
+                    Else
+                        tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                    End If
                 Else
-                    tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                    FileAlreadyExist.Add(args(1))
                 End If
             Next
             Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = Environment.ProcessorCount}, tasks.ToArray())
         Else
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
-                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
-                    outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(ItemsToProcess(Counter)) + ".opus"
-                End If
-                Dim args As Array = {ItemsToProcess(Counter), outputPath, My.Settings.Bitrate}
-                If EncOpusenc.Checked Then
-                    Run_opus(args, "opusenc")
+                Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
+                If Not IO.File.Exists(args(1)) Then
+                    If EncOpusenc.Checked Then
+                        Run_opus(args, "opusenc")
+                    Else
+                        Run_opus(args, "ffmpeg")
+                    End If
                 Else
-                    Run_opus(args, "ffmpeg")
+                    FileAlreadyExist.Add(args(1))
                 End If
             Next
         End If
@@ -102,7 +114,15 @@
                                  InputBrowseBtn.Enabled = True
                                  OutputBrowseBtn.Enabled = True
                              End Sub)
-        MsgBox("Finished")
+
+        Dim MessageToShow As String = "Finished!"
+        If FileAlreadyExist.Count > 0 Then
+            MessageToShow += Environment.NewLine + Environment.NewLine + "The following file(s) could not be encoded because there's an output file with the same filename at the destination folder:" + Environment.NewLine
+            For Each item As String In FileAlreadyExist
+                MessageToShow += "- " + item + Environment.NewLine
+            Next
+        End If
+        MsgBox(MessageToShow)
     End Sub
     Private Function Run_opus(args As Array, encoder As String)
         Dim Input_File As String = args(0)
@@ -112,24 +132,10 @@
         Dim opusProcess As Process
         opusProcessInfo.FileName = encoder + ".exe"
         If encoder = "opusenc" Then
-            If Not String.IsNullOrEmpty(Output_File) Then
-                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
-            Else
-                Dim FileWithoutExtension As String = IO.Path.GetDirectoryName(Input_File) + "\" + IO.Path.GetFileNameWithoutExtension(Input_File)
-                If Not IO.File.Exists(FileWithoutExtension + ".opus") Then
-                    opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """"
-                End If
-            End If
+            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
         Else
             If Not String.IsNullOrEmpty(Output_File) Then
                 opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Output_File + """"
-            Else
-                Dim FileWithoutExtension As String = IO.Path.GetDirectoryName(Input_File) + "\" + IO.Path.GetFileNameWithoutExtension(Input_File)
-                If Not IO.File.Exists(FileWithoutExtension + ".opus") Then
-                    opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + FileWithoutExtension + ".opus"""
-                Else
-                    Return False
-                End If
             End If
         End If
         opusProcessInfo.WorkingDirectory = IO.Path.GetDirectoryName(Input_File)
@@ -210,7 +216,9 @@
         End If
     End Sub
     Private Sub Form1_DragDrop(sender As Object, e As DragEventArgs) Handles MyBase.DragDrop
-        InputTxt.Text = CType(e.Data.GetData(DataFormats.FileDrop), String())(0)
+        If InputTxt.Enabled Then
+            InputTxt.Text = CType(e.Data.GetData(DataFormats.FileDrop), String())(0)
+        End If
     End Sub
 
     Private Sub EncOpusenc_CheckedChanged(sender As Object, e As EventArgs) Handles EncOpusenc.CheckedChanged
