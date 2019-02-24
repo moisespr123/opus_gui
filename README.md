@@ -1,7 +1,7 @@
 # opus_gui
 A GUI to process music files into Opus.
 
-![v1.6 Screenshot](https://moisescardona.me/files/2019-02-02/1.PNG)
+![v1.7 Screenshot](https://moisescardona.me/wp-content/uploads/2019/02/Opus-GUI-v1.7.png)
 
 I wrote this software to convert my FLAC music collection to the Opus format.
 
