@@ -69,8 +69,7 @@
         ProgressBar1.BeginInvoke(Sub()
                                      ProgressBar1.Maximum = ItemsToProcess.Count
                                      ProgressBar1.Value = 0
-                                 End Sub
-        )
+                                 End Sub)
         Dim tasks = New List(Of Action)
         If enableMultithreading.Checked Then
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
@@ -167,12 +166,8 @@
         EncOpusenc.Checked = My.Settings.EncOpusenc
         If Not EncFfmpeg.Checked And Not EncOpusenc.Checked Then EncOpusenc.Checked = True
         IO.Directory.SetCurrentDirectory(IO.Path.GetDirectoryName(Process.GetCurrentProcess.MainModule.FileName))
-        If OpusEncExists() Then
-            GetOpusencVersion()
-        Else
-            MessageBox.Show("opusenc.exe was not found. Exiting...")
-            Me.Close()
-        End If
+        GetOpusencVersion()
+        GetFFmpegVersion()
         Dim vars As String() = Environment.GetCommandLineArgs
         If vars.Count > 1 Then
             InputTxt.Text = vars(1)
@@ -181,16 +176,39 @@
 
 
     Private Sub GetOpusencVersion()
-        Dim opusProcessInfo As New ProcessStartInfo
-        Dim opusProcess As Process
-        opusProcessInfo.FileName = "opusenc.exe"
-        opusProcessInfo.Arguments = "-V"
-        opusProcessInfo.CreateNoWindow = True
-        opusProcessInfo.RedirectStandardOutput = True
-        opusProcessInfo.UseShellExecute = False
-        opusProcess = Process.Start(opusProcessInfo)
-        opusProcess.WaitForExit()
-        OpusVersionLabel.Text = "opusenc version: " + opusProcess.StandardOutput.ReadLine()
+        Try
+            Dim opusProcessInfo As New ProcessStartInfo
+            Dim opusProcess As Process
+            opusProcessInfo.FileName = "opusenc.exe"
+            opusProcessInfo.Arguments = "-V"
+            opusProcessInfo.CreateNoWindow = True
+            opusProcessInfo.RedirectStandardOutput = True
+            opusProcessInfo.UseShellExecute = False
+            opusProcess = Process.Start(opusProcessInfo)
+            opusProcess.WaitForExit()
+            OpusVersionLabel.Text = "opusenc version: " + opusProcess.StandardOutput.ReadLine()
+        Catch ex As Exception
+            MessageBox.Show("opusenc.exe was not found. Exiting...")
+            Process.Start("https://moisescardona.me/opusenc-builds/")
+            Me.Close()
+        End Try
+    End Sub
+    Private Sub GetFFmpegVersion()
+        Try
+            Dim ffmpegProcessInfo As New ProcessStartInfo
+            Dim ffmpegProcess As Process
+            ffmpegProcessInfo.FileName = "ffmpeg.exe"
+            ffmpegProcessInfo.CreateNoWindow = True
+            ffmpegProcessInfo.RedirectStandardError = True
+            ffmpegProcessInfo.UseShellExecute = False
+            ffmpegProcess = Process.Start(ffmpegProcessInfo)
+            ffmpegProcess.WaitForExit()
+            ffmpegVersionLabel.Text = "ffmpeg version: " + ffmpegProcess.StandardError.ReadLine()
+        Catch ex As Exception
+            ffmpegVersionLabel.Text = "ffmpegenc.exe was not found."
+            EncFfmpeg.Enabled = False
+            EncOpusenc.Checked = True
+        End Try
     End Sub
 
     Private Function OpusEncExists() As Boolean

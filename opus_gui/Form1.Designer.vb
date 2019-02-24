@@ -41,6 +41,7 @@ Partial Class Form1
         Me.EncFfmpeg = New System.Windows.Forms.RadioButton()
         Me.EncOpusenc = New System.Windows.Forms.RadioButton()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.ffmpegVersionLabel = New System.Windows.Forms.Label()
         CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -142,7 +143,7 @@ Partial Class Form1
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(12, 272)
+        Me.Label5.Location = New System.Drawing.Point(9, 300)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(119, 13)
         Me.Label5.TabIndex = 11
@@ -152,7 +153,7 @@ Partial Class Form1
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(532, 272)
+        Me.Label6.Location = New System.Drawing.Point(529, 300)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(28, 13)
         Me.Label6.TabIndex = 12
@@ -228,12 +229,22 @@ Partial Class Form1
         Me.Button1.Text = "Browse File"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'ffmpegVersionLabel
+        '
+        Me.ffmpegVersionLabel.AutoSize = True
+        Me.ffmpegVersionLabel.Location = New System.Drawing.Point(12, 265)
+        Me.ffmpegVersionLabel.Name = "ffmpegVersionLabel"
+        Me.ffmpegVersionLabel.Size = New System.Drawing.Size(79, 13)
+        Me.ffmpegVersionLabel.TabIndex = 19
+        Me.ffmpegVersionLabel.Text = "ffmpeg version:"
+        '
         'Form1
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(572, 298)
+        Me.ClientSize = New System.Drawing.Size(572, 322)
+        Me.Controls.Add(Me.ffmpegVersionLabel)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.enableMultithreading)
@@ -281,4 +292,5 @@ End Sub
     Friend WithEvents EncFfmpeg As RadioButton
     Friend WithEvents EncOpusenc As RadioButton
     Friend WithEvents Button1 As Button
+    Friend WithEvents ffmpegVersionLabel As Label
 End Class
