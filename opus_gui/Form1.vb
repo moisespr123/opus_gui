@@ -1,4 +1,7 @@
 ﻿Public Class Form1
+    Private opusenc_version As String = String.Empty
+    Private ffmpeg_version As String = String.Empty
+
     Private Sub InputBrowseBtn_Click(sender As Object, e As EventArgs) Handles InputBrowseBtn.Click
         Dim InputBrowser As New FolderBrowserDialog With {
             .ShowNewFolderButton = False
@@ -186,7 +189,8 @@
             opusProcessInfo.UseShellExecute = False
             opusProcess = Process.Start(opusProcessInfo)
             opusProcess.WaitForExit()
-            OpusVersionLabel.Text = "opusenc version: " + opusProcess.StandardOutput.ReadLine()
+            opusenc_version = opusProcess.StandardOutput.ReadLine()
+            OpusVersionLabel.Text = "opusenc version: " + opusenc_version
         Catch ex As Exception
             MessageBox.Show("opusenc.exe was not found. Exiting...")
             Process.Start("https://moisescardona.me/opusenc-builds/")
@@ -203,7 +207,8 @@
             ffmpegProcessInfo.UseShellExecute = False
             ffmpegProcess = Process.Start(ffmpegProcessInfo)
             ffmpegProcess.WaitForExit()
-            ffmpegVersionLabel.Text = "ffmpeg version: " + ffmpegProcess.StandardError.ReadLine()
+            ffmpeg_version = ffmpegProcess.StandardError.ReadLine()
+            ffmpegVersionLabel.Text = "ffmpeg version: " + ffmpeg_version
         Catch ex As Exception
             ffmpegVersionLabel.Text = "ffmpegenc.exe was not found."
             EncFfmpeg.Enabled = False
@@ -255,6 +260,18 @@
         Dim OkAction As MsgBoxResult = InputBrowser.ShowDialog
         If OkAction = MsgBoxResult.Ok Then
             InputTxt.Text = InputBrowser.FileName
+        End If
+    End Sub
+
+    Private Sub FfmpegVersionLabel_Click(sender As Object, e As EventArgs) Handles ffmpegVersionLabel.Click
+        If Not ffmpeg_version = String.Empty Then
+            Clipboard.SetText(ffmpeg_version)
+        End If
+    End Sub
+
+    Private Sub OpusVersionLabel_Click(sender As Object, e As EventArgs) Handles OpusVersionLabel.Click
+        If Not opusenc_version = String.Empty Then
+            Clipboard.SetText(opusenc_version)
         End If
     End Sub
 End Class
