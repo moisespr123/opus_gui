@@ -56,7 +56,7 @@
                 If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
                     ItemsToProcess.Add(File)
                 ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
-                    If Not ffmpeg_version == String.Empty Then
+                    If Not ffmpeg_version = String.Empty Then
                         ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
                         ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
                         ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
