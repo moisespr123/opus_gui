@@ -48,6 +48,7 @@
         Dim ItemsToProcess As List(Of String) = New List(Of String)
         Dim ItemsToDelete As List(Of String) = New List(Of String)
         Dim FileAlreadyExist As List(Of String) = New List(Of String)
+        Dim ErrorList As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         If IO.Directory.Exists(InputTxt.Text) Then
@@ -55,11 +56,15 @@
                 If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
                     ItemsToProcess.Add(File)
                 ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
-                    ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
-                    ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
-                    ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                    If Not ffmpeg_version == String.Empty Then
+                        ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
+                        ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                        ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
+                    Else
+                        ErrorList.Add(File)
+                    End If
                 Else
-                    If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                        If Not String.IsNullOrEmpty(OutputTxt.Text) Then
                         If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
                             If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
                         End If
@@ -120,6 +125,12 @@
         Dim MessageToShow As String = "Finished!"
         If FileAlreadyExist.Count > 0 Then
             MessageToShow += Environment.NewLine + Environment.NewLine + "The following file(s) could not be encoded because there's an output file with the same filename at the destination folder:" + Environment.NewLine
+            For Each item As String In FileAlreadyExist
+                MessageToShow += "- " + item + Environment.NewLine
+            Next
+        End If
+        If ErrorList.Count > 0 Then
+            MessageToShow += Environment.NewLine + Environment.NewLine + "The following file(s) could not be encoded. This could happen if you used opusenc but the files are not compatible and you don't have ffmpeg in your system:" + Environment.NewLine
             For Each item As String In FileAlreadyExist
                 MessageToShow += "- " + item + Environment.NewLine
             Next
