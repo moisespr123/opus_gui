@@ -27,6 +27,7 @@
         InputTxt.Enabled = False
         OutputTxt.Enabled = False
         InputBrowseBtn.Enabled = False
+        InputFileBtn.Enabled = False
         OutputBrowseBtn.Enabled = False
         BitrateNumberBox.Enabled = False
         enableMultithreading.Enabled = False
@@ -64,7 +65,7 @@
                         ErrorList.Add(File)
                     End If
                 Else
-                        If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                    If Not String.IsNullOrEmpty(OutputTxt.Text) Then
                         If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
                             If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
                         End If
@@ -119,6 +120,7 @@
                                  InputTxt.Enabled = True
                                  OutputTxt.Enabled = True
                                  InputBrowseBtn.Enabled = True
+                                 InputFileBtn.Enabled = True
                                  OutputBrowseBtn.Enabled = True
                              End Sub)
 
@@ -148,7 +150,7 @@
             opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
         Else
             If Not String.IsNullOrEmpty(Output_File) Then
-                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -b:a " & Bitrate & "K """ + Output_File + """"
+                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -application audio -b:a " & Bitrate & "K """ + Output_File + """"
             End If
         End If
         opusProcessInfo.WorkingDirectory = IO.Path.GetDirectoryName(Input_File)
@@ -263,7 +265,7 @@
         My.Settings.EncFfmpeg = EncFfmpeg.Checked
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles InputFileBtn.Click
         Dim InputBrowser As New OpenFileDialog With {
           .Title = "Browse for a music file:",
           .FileName = ""

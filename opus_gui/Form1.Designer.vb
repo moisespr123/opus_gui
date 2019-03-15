@@ -40,7 +40,7 @@ Partial Class Form1
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.EncFfmpeg = New System.Windows.Forms.RadioButton()
         Me.EncOpusenc = New System.Windows.Forms.RadioButton()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.InputFileBtn = New System.Windows.Forms.Button()
         Me.ffmpegVersionLabel = New System.Windows.Forms.Label()
         CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
@@ -219,15 +219,15 @@ Partial Class Form1
         Me.EncOpusenc.Text = "opusenc"
         Me.EncOpusenc.UseVisualStyleBackColor = True
         '
-        'Button1
+        'InputFileBtn
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(392, 79)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 18
-        Me.Button1.Text = "Browse File"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.InputFileBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputFileBtn.Location = New System.Drawing.Point(392, 79)
+        Me.InputFileBtn.Name = "InputFileBtn"
+        Me.InputFileBtn.Size = New System.Drawing.Size(75, 23)
+        Me.InputFileBtn.TabIndex = 18
+        Me.InputFileBtn.Text = "Browse File"
+        Me.InputFileBtn.UseVisualStyleBackColor = True
         '
         'ffmpegVersionLabel
         '
@@ -245,7 +245,7 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(572, 322)
         Me.Controls.Add(Me.ffmpegVersionLabel)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.InputFileBtn)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.enableMultithreading)
         Me.Controls.Add(Me.BitrateNumberBox)
@@ -291,6 +291,6 @@ End Sub
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents EncFfmpeg As RadioButton
     Friend WithEvents EncOpusenc As RadioButton
-    Friend WithEvents Button1 As Button
+    Friend WithEvents InputFileBtn As Button
     Friend WithEvents ffmpegVersionLabel As Label
 End Class
