@@ -38,7 +38,8 @@ Partial Class Form1
         Me.BitrateNumberBox = New System.Windows.Forms.NumericUpDown()
         Me.enableMultithreading = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.EncFfmpeg = New System.Windows.Forms.RadioButton()
+        Me.EncFFmpeg2 = New System.Windows.Forms.RadioButton()
+        Me.EncFfmpeg1 = New System.Windows.Forms.RadioButton()
         Me.EncOpusenc = New System.Windows.Forms.RadioButton()
         Me.InputFileBtn = New System.Windows.Forms.Button()
         Me.ffmpegVersionLabel = New System.Windows.Forms.Label()
@@ -155,9 +156,9 @@ Partial Class Form1
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(529, 300)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(28, 13)
+        Me.Label6.Size = New System.Drawing.Size(34, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.9"
+        Me.Label6.Text = "v1.10"
         '
         'OpusVersionLabel
         '
@@ -188,25 +189,37 @@ Partial Class Form1
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.EncFfmpeg)
+        Me.GroupBox1.Controls.Add(Me.EncFFmpeg2)
+        Me.GroupBox1.Controls.Add(Me.EncFfmpeg1)
         Me.GroupBox1.Controls.Add(Me.EncOpusenc)
         Me.GroupBox1.Location = New System.Drawing.Point(12, 12)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(151, 48)
+        Me.GroupBox1.Size = New System.Drawing.Size(271, 48)
         Me.GroupBox1.TabIndex = 17
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Encoder: "
         '
-        'EncFfmpeg
+        'EncFFmpeg2
         '
-        Me.EncFfmpeg.AutoSize = True
-        Me.EncFfmpeg.Location = New System.Drawing.Point(81, 19)
-        Me.EncFfmpeg.Name = "EncFfmpeg"
-        Me.EncFfmpeg.Size = New System.Drawing.Size(57, 17)
-        Me.EncFfmpeg.TabIndex = 1
-        Me.EncFfmpeg.TabStop = True
-        Me.EncFfmpeg.Text = "ffmpeg"
-        Me.EncFfmpeg.UseVisualStyleBackColor = True
+        Me.EncFFmpeg2.AutoSize = True
+        Me.EncFFmpeg2.Location = New System.Drawing.Point(180, 19)
+        Me.EncFFmpeg2.Name = "EncFFmpeg2"
+        Me.EncFFmpeg2.Size = New System.Drawing.Size(83, 17)
+        Me.EncFFmpeg2.TabIndex = 2
+        Me.EncFFmpeg2.TabStop = True
+        Me.EncFFmpeg2.Text = "ffmpeg opus"
+        Me.EncFFmpeg2.UseVisualStyleBackColor = True
+        '
+        'EncFfmpeg1
+        '
+        Me.EncFfmpeg1.AutoSize = True
+        Me.EncFfmpeg1.Location = New System.Drawing.Point(81, 19)
+        Me.EncFfmpeg1.Name = "EncFfmpeg1"
+        Me.EncFfmpeg1.Size = New System.Drawing.Size(93, 17)
+        Me.EncFfmpeg1.TabIndex = 1
+        Me.EncFfmpeg1.TabStop = True
+        Me.EncFfmpeg1.Text = "ffmpeg libopus"
+        Me.EncFfmpeg1.UseVisualStyleBackColor = True
         '
         'EncOpusenc
         '
@@ -289,8 +302,9 @@ End Sub
     Friend WithEvents BitrateNumberBox As NumericUpDown
     Friend WithEvents enableMultithreading As CheckBox
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents EncFfmpeg As RadioButton
+    Friend WithEvents EncFfmpeg1 As RadioButton
     Friend WithEvents EncOpusenc As RadioButton
     Friend WithEvents InputFileBtn As Button
     Friend WithEvents ffmpegVersionLabel As Label
+    Friend WithEvents EncFFmpeg2 As RadioButton
 End Class

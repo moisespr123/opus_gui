@@ -101,6 +101,18 @@ Namespace My
                 Me("EncFfmpeg") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+        Public Property EncFfmpeg2() As Boolean
+            Get
+                Return CType(Me("EncFfmpeg2"),Boolean)
+            End Get
+            Set
+                Me("EncFfmpeg2") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

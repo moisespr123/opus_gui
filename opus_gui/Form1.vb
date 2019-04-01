@@ -45,16 +45,16 @@
         Return outputPath
     End Function
     Private Sub StartThreads()
-        If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not My.Computer.FileSystem.DirectoryExists(OutputTxt.Text) Then My.Computer.FileSystem.CreateDirectory(OutputTxt.Text)
+        If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not IO.Directory.Exists(OutputTxt.Text) Then IO.Directory.CreateDirectory(OutputTxt.Text)
         Dim ItemsToProcess As List(Of String) = New List(Of String)
         Dim ItemsToDelete As List(Of String) = New List(Of String)
         Dim FileAlreadyExist As List(Of String) = New List(Of String)
         Dim ErrorList As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
-        If My.Computer.FileSystem.FileExists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
+        If IO.File.Exists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         If IO.Directory.Exists(InputTxt.Text) Then
             For Each File In IO.Directory.GetFiles(InputTxt.Text)
-                If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg.Checked Then
+                If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg1.Checked Or EncFFmpeg2.Checked Then
                     ItemsToProcess.Add(File)
                 ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
                     If Not ffmpeg_version = String.Empty Then
@@ -66,7 +66,7 @@
                     End If
                 Else
                     If Not String.IsNullOrEmpty(OutputTxt.Text) Then
-                        If Not My.Computer.FileSystem.FileExists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
+                        If Not IO.File.Exists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
                             If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
                         End If
                     End If
@@ -85,9 +85,11 @@
                 Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
                 If Not IO.File.Exists(args(1)) Then
                     If EncOpusenc.Checked Then
-                        tasks.Add(Function() Run_opus(args, "opusenc"))
+                        tasks.Add(Function() Run_opus(args, "opusenc", "opusenc"))
+                    ElseIf EncFfmpeg1.Checked Then
+                        tasks.Add(Function() Run_opus(args, "ffmpeg1", "ffmpeg"))
                     Else
-                        tasks.Add(Function() Run_opus(args, "ffmpeg"))
+                        tasks.Add(Function() Run_opus(args, "ffmpeg2", "ffmpeg"))
                     End If
                 Else
                     FileAlreadyExist.Add(args(1))
@@ -99,9 +101,11 @@
                 Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
                 If Not IO.File.Exists(args(1)) Then
                     If EncOpusenc.Checked Then
-                        Run_opus(args, "opusenc")
-                    Else
-                        Run_opus(args, "ffmpeg")
+                        Run_opus(args, "opusenc", "opusenc")
+                    ElseIf EncFfmpeg1.Checked Then
+                        Run_opus(args, "ffmpeg1", "ffmpeg")
+                    ElseIf EncFFmpeg2.Checked Then
+                        Run_opus(args, "ffmpeg2", "ffmpeg")
                     End If
                 Else
                     FileAlreadyExist.Add(args(1))
@@ -139,20 +143,21 @@
         End If
         MsgBox(MessageToShow)
     End Sub
-    Private Function Run_opus(args As Array, encoder As String)
+    Private Function Run_opus(args As Array, encoder As String, encoderExe As String)
         Dim Input_File As String = args(0)
         Dim Output_File As String = args(1)
         Dim Bitrate As String = args(2)
         Dim opusProcessInfo As New ProcessStartInfo
         Dim opusProcess As Process
-        opusProcessInfo.FileName = encoder + ".exe"
-        If encoder = "opusenc" Then
-            opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
-        Else
-            If Not String.IsNullOrEmpty(Output_File) Then
+        opusProcessInfo.FileName = encoderExe + ".exe"
+        Select Case encoder
+            Case "opusenc"
+                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+            Case "ffmpeg1"
                 opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -application audio -b:a " & Bitrate & "K """ + Output_File + """"
-            End If
-        End If
+            Case "ffmpeg2"
+                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a opus -strict -2 -b:a " & Bitrate & "K """ + Output_File + """"
+        End Select
         opusProcessInfo.WorkingDirectory = IO.Path.GetDirectoryName(Input_File)
         opusProcessInfo.CreateNoWindow = True
         opusProcessInfo.RedirectStandardOutput = False
@@ -178,9 +183,10 @@
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateNumberBox.Value = My.Settings.Bitrate
         enableMultithreading.Checked = My.Settings.Multithreading
-        EncFfmpeg.Checked = My.Settings.EncFfmpeg
+        EncFfmpeg1.Checked = My.Settings.EncFfmpeg
+        EncFFmpeg2.Checked = My.Settings.EncFfmpeg2
         EncOpusenc.Checked = My.Settings.EncOpusenc
-        If Not EncFfmpeg.Checked And Not EncOpusenc.Checked Then EncOpusenc.Checked = True
+        If Not EncFfmpeg1.Checked And Not EncFFmpeg2.Checked And Not EncOpusenc.Checked Then EncOpusenc.Checked = True
         IO.Directory.SetCurrentDirectory(IO.Path.GetDirectoryName(Process.GetCurrentProcess.MainModule.FileName))
         GetOpusencVersion()
         GetFFmpegVersion()
@@ -221,16 +227,17 @@
             ffmpegProcess = Process.Start(ffmpegProcessInfo)
             ffmpegProcess.WaitForExit()
             ffmpeg_version = ffmpegProcess.StandardError.ReadLine()
-            ffmpegVersionLabel.Text = "ffmpeg version: " + ffmpeg_version
+            ffmpegVersionLabel.Text = ffmpeg_version
         Catch ex As Exception
             ffmpegVersionLabel.Text = "ffmpegenc.exe was not found."
-            EncFfmpeg.Enabled = False
+            EncFfmpeg1.Enabled = False
+            EncFFmpeg2.Enabled = False
             EncOpusenc.Checked = True
         End Try
     End Sub
 
-    Private Function OpusEncExists() As Boolean
-        If My.Computer.FileSystem.FileExists("opusenc.exe") Then
+    Private Function OpusEncExists() As Boolean 'Currently not used
+        If IO.File.Exists("opusenc.exe") Then
             Return True
         Else
             Return False
@@ -259,10 +266,12 @@
 
     Private Sub EncOpusenc_CheckedChanged(sender As Object, e As EventArgs) Handles EncOpusenc.CheckedChanged
         My.Settings.EncOpusenc = EncOpusenc.Checked
+        My.Settings.Save()
     End Sub
 
-    Private Sub EncFfmpeg_CheckedChanged(sender As Object, e As EventArgs) Handles EncFfmpeg.CheckedChanged
-        My.Settings.EncFfmpeg = EncFfmpeg.Checked
+    Private Sub EncFfmpeg_CheckedChanged(sender As Object, e As EventArgs) Handles EncFfmpeg1.CheckedChanged
+        My.Settings.EncFfmpeg = EncFfmpeg1.Checked
+        My.Settings.Save()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles InputFileBtn.Click
@@ -286,5 +295,10 @@
         If Not opusenc_version = String.Empty Then
             Clipboard.SetText(opusenc_version)
         End If
+    End Sub
+
+    Private Sub EncFFmpeg2_CheckedChanged(sender As Object, e As EventArgs) Handles EncFFmpeg2.CheckedChanged
+        My.Settings.EncFfmpeg2 = EncFFmpeg2.Checked
+        My.Settings.Save()
     End Sub
 End Class
