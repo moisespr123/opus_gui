@@ -43,6 +43,7 @@ Partial Class Form1
         Me.EncOpusenc = New System.Windows.Forms.RadioButton()
         Me.InputFileBtn = New System.Windows.Forms.Button()
         Me.ffmpegVersionLabel = New System.Windows.Forms.Label()
+        Me.GoogleDriveButton = New System.Windows.Forms.Button()
         CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -158,7 +159,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(34, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.10"
+        Me.Label6.Text = "v1.11"
         '
         'OpusVersionLabel
         '
@@ -251,12 +252,23 @@ Partial Class Form1
         Me.ffmpegVersionLabel.TabIndex = 19
         Me.ffmpegVersionLabel.Text = "ffmpeg version:"
         '
+        'GoogleDriveButton
+        '
+        Me.GoogleDriveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GoogleDriveButton.Location = New System.Drawing.Point(392, 28)
+        Me.GoogleDriveButton.Name = "GoogleDriveButton"
+        Me.GoogleDriveButton.Size = New System.Drawing.Size(165, 23)
+        Me.GoogleDriveButton.TabIndex = 20
+        Me.GoogleDriveButton.Text = "Google Drive"
+        Me.GoogleDriveButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(572, 322)
+        Me.Controls.Add(Me.GoogleDriveButton)
         Me.Controls.Add(Me.ffmpegVersionLabel)
         Me.Controls.Add(Me.InputFileBtn)
         Me.Controls.Add(Me.GroupBox1)
@@ -295,16 +307,17 @@ End Sub
     Friend WithEvents OutputBrowseBtn As Button
     Friend WithEvents StartBtn As Button
     Friend WithEvents Label4 As Label
-    Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents Label5 As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents OpusVersionLabel As Label
     Friend WithEvents BitrateNumberBox As NumericUpDown
     Friend WithEvents enableMultithreading As CheckBox
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents EncFfmpeg1 As RadioButton
-    Friend WithEvents EncOpusenc As RadioButton
     Friend WithEvents InputFileBtn As Button
     Friend WithEvents ffmpegVersionLabel As Label
+    Friend WithEvents GoogleDriveButton As Button
+    Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents EncFfmpeg1 As RadioButton
+    Friend WithEvents EncOpusenc As RadioButton
     Friend WithEvents EncFFmpeg2 As RadioButton
 End Class

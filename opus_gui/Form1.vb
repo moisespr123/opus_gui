@@ -1,6 +1,7 @@
 ﻿Public Class Form1
     Private opusenc_version As String = String.Empty
     Private ffmpeg_version As String = String.Empty
+    Public Running As Boolean = False
 
     Private Sub InputBrowseBtn_Click(sender As Object, e As EventArgs) Handles InputBrowseBtn.Click
         Dim InputBrowser As New FolderBrowserDialog With {
@@ -21,8 +22,7 @@
             OutputTxt.Text = OutputBrowser.SelectedPath
         End If
     End Sub
-
-    Private Sub StartBtn_Click(sender As Object, e As EventArgs) Handles StartBtn.Click
+    Private Sub DisableElements()
         StartBtn.Enabled = False
         InputTxt.Enabled = False
         OutputTxt.Enabled = False
@@ -31,7 +31,20 @@
         OutputBrowseBtn.Enabled = False
         BitrateNumberBox.Enabled = False
         enableMultithreading.Enabled = False
+        Running = True
+    End Sub
+    Private Sub StartBtn_Click(sender As Object, e As EventArgs) Handles StartBtn.Click
+        If InputTxt.Text = String.Empty Then
+            MessageBox.Show("There was no input file or folder specified. Cannot encode")
+            Exit Sub
+        End If
+        DisableElements()
         Dim StartTasks As New Threading.Thread(Sub() StartThreads())
+        StartTasks.Start()
+    End Sub
+    Public Sub StartGoogleDriveEncodes(GDriveItemsToProcess As List(Of String), GDriveItemIDs As List(Of String))
+        DisableElements()
+        Dim StartTasks As New Threading.Thread(Sub() StartThreads(True, GDriveItemsToProcess, GDriveItemIDs))
         StartTasks.Start()
     End Sub
 
@@ -44,7 +57,7 @@
         End If
         Return outputPath
     End Function
-    Private Sub StartThreads()
+    Public Sub StartThreads(Optional GoogleDrive As Boolean = False, Optional GDriveItemsToProcess As List(Of String) = Nothing, Optional GDriveItemIDs As List(Of String) = Nothing)
         If Not String.IsNullOrEmpty(OutputTxt.Text) Then If Not IO.Directory.Exists(OutputTxt.Text) Then IO.Directory.CreateDirectory(OutputTxt.Text)
         Dim ItemsToProcess As List(Of String) = New List(Of String)
         Dim ItemsToDelete As List(Of String) = New List(Of String)
@@ -52,8 +65,15 @@
         Dim ErrorList As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
         If IO.File.Exists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
-        If IO.Directory.Exists(InputTxt.Text) Then
-            For Each File In IO.Directory.GetFiles(InputTxt.Text)
+        If IO.Directory.Exists(InputTxt.Text) Or GoogleDrive Then
+            Dim Items As Object
+            If Not GoogleDrive Then
+                Items = IO.Directory.GetFiles(InputTxt.Text)
+            Else
+                Items = GDriveItemsToProcess
+                ItemsToDelete = GDriveItemsToProcess
+            End If
+            For Each File In Items
                 If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg1.Checked Or EncFFmpeg2.Checked Then
                     ItemsToProcess.Add(File)
                 ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
@@ -76,9 +96,21 @@
             ItemsToProcess.Add(InputTxt.Text)
         End If
         ProgressBar1.BeginInvoke(Sub()
-                                     ProgressBar1.Maximum = ItemsToProcess.Count
+                                     If Not GoogleDrive Then
+                                         ProgressBar1.Maximum = ItemsToProcess.Count
+                                     Else
+                                         ProgressBar1.Maximum = ItemsToProcess.Count * 2
+                                     End If
                                      ProgressBar1.Value = 0
                                  End Sub)
+        If GoogleDrive Then
+            For Counter As Integer = 0 To GDriveItemIDs.Count - 1
+                Dim fileStream As New IO.FileStream(GDriveItemsToProcess(Counter), IO.FileMode.Create)
+                GoogleDriveForm.drive.DownloadFile(GDriveItemIDs(Counter), fileStream)
+                fileStream.Close()
+                ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
+            Next
+        End If
         Dim tasks = New List(Of Action)
         If enableMultithreading.Checked Then
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
@@ -117,6 +149,7 @@
                 My.Computer.FileSystem.DeleteFile(item)
             Next
         End If
+        Running = False
         StartBtn.BeginInvoke(Sub()
                                  StartBtn.Enabled = True
                                  BitrateNumberBox.Enabled = True
@@ -127,7 +160,6 @@
                                  InputFileBtn.Enabled = True
                                  OutputBrowseBtn.Enabled = True
                              End Sub)
-
         Dim MessageToShow As String = "Finished!"
         If FileAlreadyExist.Count > 0 Then
             MessageToShow += Environment.NewLine + Environment.NewLine + "The following file(s) could not be encoded because there's an output file with the same filename at the destination folder:" + Environment.NewLine
@@ -300,5 +332,10 @@
     Private Sub EncFFmpeg2_CheckedChanged(sender As Object, e As EventArgs) Handles EncFFmpeg2.CheckedChanged
         My.Settings.EncFfmpeg2 = EncFFmpeg2.Checked
         My.Settings.Save()
+    End Sub
+
+    Private Sub GoogleDriveButton_Click(sender As Object, e As EventArgs) Handles GoogleDriveButton.Click
+        Dim gdriveForm As New GoogleDriveForm With {.Owner = Me}
+        gdriveForm.Show()
     End Sub
 End Class
