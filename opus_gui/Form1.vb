@@ -104,12 +104,12 @@
                                      ProgressBar1.Value = 0
                                  End Sub)
         If GoogleDrive Then
+            Dim download_tasks = New List(Of Action)
             For Counter As Integer = 0 To GDriveItemIDs.Count - 1
-                Dim fileStream As New IO.FileStream(GDriveItemsToProcess(Counter), IO.FileMode.Create)
-                GoogleDriveForm.drive.DownloadFile(GDriveItemIDs(Counter), fileStream)
-                fileStream.Close()
-                ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
+                Dim i As Integer = Counter
+                download_tasks.Add(Function() Download_Files(GDriveItemsToProcess(i), GDriveItemIDs(i)))
             Next
+            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = 4}, download_tasks.ToArray())
         End If
         Dim tasks = New List(Of Action)
         If enableMultithreading.Checked Then
@@ -175,6 +175,13 @@
         End If
         MsgBox(MessageToShow)
     End Sub
+    Private Function Download_Files(Filename As String, Id As String)
+        Dim fileStream As New IO.FileStream(Filename, IO.FileMode.Create)
+        GoogleDriveForm.drive.DownloadFile(Id, fileStream)
+        fileStream.Close()
+        ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
+        Return True
+    End Function
     Private Function Run_opus(args As Array, encoder As String, encoderExe As String)
         Dim Input_File As String = args(0)
         Dim Output_File As String = args(1)
