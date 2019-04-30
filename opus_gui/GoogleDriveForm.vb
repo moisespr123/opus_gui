@@ -97,4 +97,17 @@
         If FoldersListBox.SelectedIndex > -1 Then PopulateListBoxes(drive, drive.FolderListID(FoldersListBox.SelectedIndex))
     End Sub
 
+    Private Sub FoldersListBox_KeyDown(sender As Object, e As KeyEventArgs) Handles FoldersListBox.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            If FoldersListBox.SelectedIndex > -1 Then
+                PopulateListBoxes(drive, drive.FolderListID(FoldersListBox.SelectedIndex))
+            End If
+        ElseIf e.KeyCode = Keys.Back Then
+            If (GoBackButton.Enabled) Then
+                PopulateListBoxes(drive, "back")
+            End If
+        ElseIf (e.KeyCode = Keys.F5) Then
+            PopulateListBoxes(drive, drive.currentFolder, True)
+        End If
+    End Sub
 End Class
