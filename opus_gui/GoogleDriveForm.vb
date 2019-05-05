@@ -5,7 +5,7 @@
         If drive.connected Then
             PopulateListBoxes(drive)
         Else
-            MessageBox.Show("client_secret.json file not found. Please follow Step 1 in this guide: https://developers.google.com/drive/v3/web/quickstart/dotnet" & Environment.NewLine + Environment.NewLine & "This file should be located in the folder where this software is located.")
+            MessageBox.Show("client_secret.json or credentials.json file not found. Please follow Step 1 in this guide: https://developers.google.com/drive/v3/web/quickstart/dotnet" & Environment.NewLine + Environment.NewLine & "This file should be located in the folder where this software is located.")
             Process.Start("https://developers.google.com/drive/v3/web/quickstart/dotnet")
             Close()
         End If
