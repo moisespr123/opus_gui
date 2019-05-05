@@ -1,5 +1,11 @@
 image: Visual Studio 2017
 configuration: Release
 
+before_build:
+  - nuget restore
+  
+build_script: 
+ - msbuild "opus_gui.sln" /p:TargetFrameworkVersion=v4.7.2
+
 artifacts:
  - path: opus_gui\bin\Release\opus_gui.exe

@@ -20,27 +20,26 @@ Public Class GoogleDriveClass
     Public credential As UserCredential
     Public Sub New(ByVal AppName As String)
         SoftwareName = AppName
-        Try
-            If File.Exists("client_secret.json") Then
-
-                Using stream = New FileStream("client_secret.json", FileMode.Open, FileAccess.Read)
-                    Dim credPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                    credPath = Path.Combine(credPath, ".credentials/" & SoftwareName & ".json")
-                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
-                End Using
-
-                service = New DriveService(New BaseClientService.Initializer() With {
-                    .HttpClientInitializer = credential,
-                    .ApplicationName = SoftwareName
-                })
-                connected = True
-            Else
-                connected = False
-            End If
-
-        Catch
+        Dim SectretsFile As String = String.Empty
+        If File.Exists("client_secret.json") Then
+            SectretsFile = "client_secret.json"
+        ElseIf File.Exists("credentials.json") Then
+            SectretsFile = "credentials.json"
+        End If
+        If Not SectretsFile = String.Empty Then
+            Using stream = New FileStream(SectretsFile, FileMode.Open, FileAccess.Read)
+                Dim credPath As String = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                credPath = Path.Combine(credPath, ".credentials/" & SoftwareName & ".json")
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes, "user", CancellationToken.None, New FileDataStore(credPath, True)).Result
+            End Using
+            service = New DriveService(New BaseClientService.Initializer() With {
+                .HttpClientInitializer = credential,
+                .ApplicationName = SoftwareName
+            })
+            connected = True
+        Else
             connected = False
-        End Try
+        End If
     End Sub
     Private Async Function getToken(ByVal credentials As UserCredential) As Task(Of String)
         Return Await credentials.GetAccessTokenForRequestAsync()
