@@ -155,11 +155,11 @@ Partial Class Form1
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(529, 300)
+        Me.Label6.Location = New System.Drawing.Point(517, 300)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(34, 13)
+        Me.Label6.Size = New System.Drawing.Size(43, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.12"
+        Me.Label6.Text = "v1.12.1"
         '
         'OpusVersionLabel
         '
