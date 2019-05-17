@@ -109,7 +109,7 @@
                 Dim i As Integer = Counter
                 download_tasks.Add(Function() Download_Files(GDriveItemsToProcess(i), GDriveItemIDs(i)))
             Next
-            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = 4}, download_tasks.ToArray())
+            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = My.Settings.MaxDriveDownloads}, download_tasks.ToArray())
         End If
         Dim tasks = New List(Of Action)
         If enableMultithreading.Checked Then

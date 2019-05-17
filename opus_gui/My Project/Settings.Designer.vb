@@ -113,6 +113,18 @@ Namespace My
                 Me("EncFfmpeg2") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("4")>  _
+        Public Property MaxDriveDownloads() As Integer
+            Get
+                Return CType(Me("MaxDriveDownloads"),Integer)
+            End Get
+            Set
+                Me("MaxDriveDownloads") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
