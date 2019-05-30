@@ -345,4 +345,11 @@
         Dim gdriveForm As New GoogleDriveForm With {.Owner = Me}
         gdriveForm.Show()
     End Sub
+
+    Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyValue = Keys.F5 Then
+            GetOpusencVersion()
+            GetFFmpegVersion()
+        End If
+    End Sub
 End Class
