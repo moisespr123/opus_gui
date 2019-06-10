@@ -24,7 +24,6 @@
         FilesListBox.Items.Clear()
         Try
             If drive.FolderList.Count > 0 Then
-
                 For Each item As String In drive.FolderList
                     FoldersListBox.Items.Add(item)
                 Next
@@ -66,11 +65,15 @@
     Private Sub EncodeSelected_Click(sender As Object, e As EventArgs) Handles EncodeSelected.Click
         Dim ItemNames As List(Of String) = New List(Of String)
         Dim ItemIDs As List(Of String) = New List(Of String)
-        For Each item In FilesListBox.SelectedItems
-            ItemNames.Add(item)
-            ItemIDs.Add(drive.FileListID(FilesListBox.Items.IndexOf(item)))
-        Next
-        StartEncodeTask(ItemNames, ItemIDs)
+        If FilesListBox.SelectedItems.Count > 0 Then
+            For Each item In FilesListBox.SelectedItems
+                ItemNames.Add(item)
+                ItemIDs.Add(drive.FileListID(FilesListBox.Items.IndexOf(item)))
+            Next
+            StartEncodeTask(ItemNames, ItemIDs)
+        Else
+            MsgBox("You did not select an item to encode.")
+        End If
     End Sub
 
     Private Sub EncodeAll_Click(sender As Object, e As EventArgs) Handles EncodeAll.Click
