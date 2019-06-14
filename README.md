@@ -1,7 +1,7 @@
 # Opus GUI
 A GUI to encode music files into Opus.
 
-![v1.12.5 Screenshot](https://moisescardona.me/wp-content/uploads/2019/06/Opus-GUI-v1.12.5.png)
+![v1.12.6 Screenshot](https://moisescardona.me/wp-content/uploads/2019/06/Opus-GUI-v1.12.6.png)
 
 It allows you to encode files to Opus using the following encoding methods:
 
