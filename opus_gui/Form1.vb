@@ -1,4 +1,6 @@
-﻿Public Class Form1
+﻿Imports System.IO.Pipes
+
+Public Class Form1
     Private opusenc_version As String = String.Empty
     Private ffmpeg_version As String = String.Empty
     Public Running As Boolean = False
@@ -53,7 +55,7 @@
         If Not String.IsNullOrEmpty(OutputFolder) Then
             outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(Item) + ".opus"
         Else
-            outputPath = IO.Path.GetDirectoryName(Item) + "\" + IO.Path.GetFileNameWithoutExtension(Item) + ".opus"
+            outputPath = IO.Path.ChangeExtension(Item, ".opus")
         End If
         Return outputPath
     End Function
@@ -64,30 +66,24 @@
         Dim FileAlreadyExist As List(Of String) = New List(Of String)
         Dim ErrorList As List(Of String) = New List(Of String)
         Dim IgnoreFilesWithExtensions As String = String.Empty
+        Dim Item_Type As Integer = 0
         If IO.File.Exists("ignore.txt") Then IgnoreFilesWithExtensions = My.Computer.FileSystem.ReadAllText("ignore.txt")
         If IO.Directory.Exists(InputTxt.Text) Or GoogleDrive Then
             Dim Items As Object
             If Not GoogleDrive Then
+                Item_Type = 0
                 Items = IO.Directory.GetFiles(InputTxt.Text)
             Else
+                Item_Type = 1
                 Items = GDriveItemsToProcess
-                ItemsToDelete = GDriveItemsToProcess
             End If
             For Each File In Items
-                If (IO.Path.GetExtension(File) = ".wav" Or IO.Path.GetExtension(File) = ".flac" Or IO.Path.GetExtension(File) = ".opus" And EncOpusenc.Checked) Or EncFfmpeg1.Checked Or EncFFmpeg2.Checked Then
-                    ItemsToProcess.Add(File)
-                ElseIf IO.Path.GetExtension(File) = ".mp3" Or IO.Path.GetExtension(File) = ".m4a" And EncOpusenc.Checked Then
-                    If Not ffmpeg_version = String.Empty Then
-                        ffmpeg_preprocess(File, IO.Path.GetFileNameWithoutExtension(File))
-                        ItemsToProcess.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
-                        ItemsToDelete.Add(IO.Path.GetFileNameWithoutExtension(File) + ".flac")
-                    Else
-                        ErrorList.Add(File)
-                    End If
-                Else
-                    If Not String.IsNullOrEmpty(OutputTxt.Text) Then
-                        If Not IO.File.Exists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
-                            If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                If Not String.IsNullOrEmpty(OutputTxt.Text) Then
+                    If Not IO.File.Exists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
+                        If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then
+                            ItemsToProcess.Add(File)
+                        Else
+                            My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
                         End If
                     End If
                 End If
@@ -96,25 +92,18 @@
             ItemsToProcess.Add(InputTxt.Text)
         End If
         ProgressBar1.BeginInvoke(Sub()
-                                     If Not GoogleDrive Then
-                                         ProgressBar1.Maximum = ItemsToProcess.Count
-                                     Else
-                                         ProgressBar1.Maximum = ItemsToProcess.Count * 2
-                                     End If
+                                     ProgressBar1.Maximum = ItemsToProcess.Count
                                      ProgressBar1.Value = 0
                                  End Sub)
-        If GoogleDrive Then
-            Dim download_tasks = New List(Of Action)
-            For Counter As Integer = 0 To GDriveItemIDs.Count - 1
-                Dim i As Integer = Counter
-                download_tasks.Add(Function() Download_Files(GDriveItemsToProcess(i), GDriveItemIDs(i)))
-            Next
-            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = My.Settings.MaxDriveDownloads}, download_tasks.ToArray())
-        End If
         Dim tasks = New List(Of Action)
         If enableMultithreading.Checked Then
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
-                Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
+                Dim args As Array
+                If GoogleDrive Then
+                    args = {GDriveItemIDs(Counter), 1, GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), IO.Path.GetExtension(ItemsToProcess(Counter)), My.Settings.Bitrate}
+                Else
+                    args = {ItemsToProcess(Counter), 0, GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), IO.Path.GetExtension(ItemsToProcess(Counter)), My.Settings.Bitrate}
+                End If
                 If Not IO.File.Exists(args(1)) Then
                     If EncOpusenc.Checked Then
                         tasks.Add(Function() Run_opus(args, "opusenc", "opusenc"))
@@ -175,50 +164,97 @@
         End If
         MsgBox(MessageToShow)
     End Sub
-    Private Function Download_Files(Filename As String, Id As String)
-        Dim fileStream As New IO.FileStream(Filename, IO.FileMode.Create)
-        GoogleDriveForm.drive.DownloadFile(Id, fileStream)
-        fileStream.Close()
-        ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
-        Return True
+    Private Function Download_Files(id As String) As IO.MemoryStream
+        Using memoryStream As New IO.MemoryStream
+            GoogleDriveForm.drive.DownloadFile(id, memoryStream)
+            Return memoryStream
+        End Using
     End Function
-    Private Function Run_opus(args As Array, encoder As String, encoderExe As String)
+    Private Function Run_opus(args As Array, encoder As String, encoderExe As String) As Boolean
         Dim Input_File As String = args(0)
-        Dim Output_File As String = args(1)
-        Dim Bitrate As String = args(2)
+        Dim Input_Type As Integer = args(1)
+        Dim Output_File As String = args(2)
+        Dim FileExtension As String = args(3)
+        Dim Bitrate As String = args(4)
         Dim opusProcessInfo As New ProcessStartInfo
         Dim opusProcess As Process
         opusProcessInfo.FileName = encoderExe + ".exe"
+        Dim Data As Byte()
+        If Input_Type = 0 Then
+            Data = IO.File.ReadAllBytes(Input_File)
+        Else
+            Data = Download_Files(Input_File).ToArray()
+        End If
         Select Case encoder
             Case "opusenc"
-                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " """ + Input_File + """ """ + Output_File + """"
+                If Not (FileExtension = ".wav" Or FileExtension = ".flac" Or FileExtension = ".opus") Then
+                    If Not ffmpeg_version = String.Empty Then
+                        Data = ffmpeg_preprocess(Data)
+                    Else
+                        Return False
+                    End If
+                End If
+                opusProcessInfo.Arguments = "--music --bitrate " & Bitrate & " - """ + Output_File + """"
             Case "ffmpeg1"
-                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a libopus -application audio -b:a " & Bitrate & "K """ + Output_File + """"
+                opusProcessInfo.Arguments = "-i - -c:a libopus -application audio -b:a " & Bitrate & "K -c:v copy """ + Output_File + """"
             Case "ffmpeg2"
-                opusProcessInfo.Arguments = "-i """ + Input_File + """ -c:a opus -strict -2 -b:a " & Bitrate & "K """ + Output_File + """"
+                opusProcessInfo.Arguments = "-i - -c:a opus -strict -2 -b:a " & Bitrate & "K -c:v copy """ + Output_File + """"
         End Select
         opusProcessInfo.WorkingDirectory = IO.Path.GetDirectoryName(Input_File)
         opusProcessInfo.CreateNoWindow = True
         opusProcessInfo.RedirectStandardOutput = False
+        opusProcessInfo.RedirectStandardInput = True
         opusProcessInfo.UseShellExecute = False
         opusProcess = Process.Start(opusProcessInfo)
+        Dim ffmpegIn As IO.Stream = opusProcess.StandardInput.BaseStream
+        ffmpegIn.Write(Data, 0, Data.Length)
+        ffmpegIn.Flush()
+        ffmpegIn.Close()
         opusProcess.WaitForExit()
         ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
         Return True
     End Function
-    Private Function ffmpeg_preprocess(Input As String, Output As String)
+    Private Function ffmpeg_preprocess(Input As Byte()) As Byte()
+        Dim InputPipe As New NamedPipeServerStream("ffin", PipeDirection.Out, -1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 16384, 0)
+        Dim OutputPipe As New NamedPipeServerStream("ffout.flac", PipeDirection.In, -1, PipeTransmissionMode.Byte, PipeOptions.WriteThrough, 0, 16384)
         Dim ffmpegProcessInfo As New ProcessStartInfo
         Dim ffmpegProcess As Process
         ffmpegProcessInfo.FileName = "ffmpeg.exe"
-        ffmpegProcessInfo.Arguments = "-i """ + Input + """ -c:a flac """ + Output + ".flac"" -y"
+        ffmpegProcessInfo.Arguments = "-i \\.\pipe\ffin -c:a flac -c:v copy \\.\pipe\ffout.flac -y"
         ffmpegProcessInfo.CreateNoWindow = True
-        ffmpegProcessInfo.RedirectStandardOutput = False
+        ffmpegProcessInfo.RedirectStandardInput = True
+        ffmpegProcessInfo.RedirectStandardOutput = True
         ffmpegProcessInfo.UseShellExecute = False
         ffmpegProcess = Process.Start(ffmpegProcessInfo)
+        WriteByteAsync(InputPipe, Input)
+        Dim lastRead As Integer
+        OutputPipe.WaitForConnection()
+        Dim PipedOutput As Byte()
+        Using ms As New IO.MemoryStream
+            Dim buffer As Byte() = New Byte(16384) {}
+            Do
+                lastRead = OutputPipe.Read(buffer, 0, 16384)
+                ms.Write(buffer, 0, lastRead)
+            Loop While lastRead > 0
+            PipedOutput = ms.ToArray()
+            OutputPipe.Close()
+        End Using
         ffmpegProcess.WaitForExit()
-        Return True
+        Return PipedOutput
     End Function
+    Private Async Sub WriteByteAsync(InputPipe As NamedPipeServerStream, Input As Byte())
+        InputPipe.WaitForConnection()
+        Dim ChunkSize As Integer = 16384
+        For Bytes As Long = 0 To Input.Length Step 16384
+            If Input.Length - Bytes < ChunkSize Then
+                ChunkSize = Input.Length - Bytes
+            End If
+            Await InputPipe.WriteAsync(Input, Bytes, ChunkSize)
+        Next
 
+        InputPipe.Flush()
+        InputPipe.Dispose()
+    End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BitrateNumberBox.Value = My.Settings.Bitrate
         enableMultithreading.Checked = My.Settings.Multithreading

@@ -115,7 +115,11 @@ Public Class GoogleDriveClass
     End Sub
 
     Public Sub DownloadFile(ByVal Id As String, ByVal stream As FileStream)
-        Dim getRequest As FilesResource.GetRequest = service.Files.[Get](Id)
+        Dim getRequest As FilesResource.GetRequest = service.Files.Get(Id)
+        getRequest.Download(stream)
+    End Sub
+    Public Sub DownloadFile(ByVal Id As String, ByVal stream As MemoryStream)
+        Dim getRequest As FilesResource.GetRequest = service.Files.Get(Id)
         getRequest.Download(stream)
     End Sub
 End Class
