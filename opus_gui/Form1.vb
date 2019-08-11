@@ -189,7 +189,7 @@ Public Class Form1
             Case "opusenc"
                 If Not (FileExtension = ".wav" Or FileExtension = ".flac" Or FileExtension = ".opus") Then
                     If Not ffmpeg_version = String.Empty Then
-                        Data = ffmpeg_preprocess(Data)
+                        Data = ffmpeg_preprocess(Data, Input_File)
                     Else
                         Return False
                     End If
@@ -214,13 +214,15 @@ Public Class Form1
         ProgressBar1.BeginInvoke(Sub() ProgressBar1.PerformStep())
         Return True
     End Function
-    Private Function ffmpeg_preprocess(Input As Byte()) As Byte()
-        Dim InputPipe As New NamedPipeServerStream("ffin", PipeDirection.Out, -1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 16384, 0)
-        Dim OutputPipe As New NamedPipeServerStream("ffout.flac", PipeDirection.In, -1, PipeTransmissionMode.Byte, PipeOptions.WriteThrough, 0, 16384)
+    Private Function ffmpeg_preprocess(Input As Byte(), Filename As String) As Byte()
+        Dim input_file As String = IO.Path.GetFileName(Filename)
+        Dim output_file As String = IO.Path.GetFileNameWithoutExtension(Filename) + ".flac"
+        Dim InputPipe As New NamedPipeServerStream(input_file, PipeDirection.Out, -1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 16384, 0)
+        Dim OutputPipe As New NamedPipeServerStream(output_file, PipeDirection.In, -1, PipeTransmissionMode.Byte, PipeOptions.WriteThrough, 0, 16384)
         Dim ffmpegProcessInfo As New ProcessStartInfo
         Dim ffmpegProcess As Process
         ffmpegProcessInfo.FileName = "ffmpeg.exe"
-        ffmpegProcessInfo.Arguments = "-i \\.\pipe\ffin -c:a flac -c:v copy \\.\pipe\ffout.flac -y"
+        ffmpegProcessInfo.Arguments = "-i ""\\.\pipe\" + input_file + """ -c:a flac -c:v copy ""\\.\pipe\" + output_file + """ -y"
         ffmpegProcessInfo.CreateNoWindow = True
         ffmpegProcessInfo.RedirectStandardInput = True
         ffmpegProcessInfo.RedirectStandardOutput = True
@@ -270,7 +272,6 @@ Public Class Form1
             InputTxt.Text = vars(1)
         End If
     End Sub
-
 
     Private Sub GetOpusencVersion()
         Try

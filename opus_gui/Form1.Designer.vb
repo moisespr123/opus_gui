@@ -44,13 +44,13 @@ Partial Class Form1
         Me.InputFileBtn = New System.Windows.Forms.Button()
         Me.ffmpegVersionLabel = New System.Windows.Forms.Label()
         Me.GoogleDriveButton = New System.Windows.Forms.Button()
-        CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox1.SuspendLayout()
-        Me.SuspendLayout()
+        CType(Me.BitrateNumberBox,System.ComponentModel.ISupportInitialize).BeginInit
+        Me.GroupBox1.SuspendLayout
+        Me.SuspendLayout
         '
         'Label1
         '
-        Me.Label1.AutoSize = True
+        Me.Label1.AutoSize = true
         Me.Label1.Location = New System.Drawing.Point(9, 64)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(372, 13)
@@ -59,7 +59,7 @@ Partial Class Form1
         '
         'Label2
         '
-        Me.Label2.AutoSize = True
+        Me.Label2.AutoSize = true
         Me.Label2.Location = New System.Drawing.Point(9, 107)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(274, 13)
@@ -68,8 +68,8 @@ Partial Class Form1
         '
         'InputTxt
         '
-        Me.InputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.InputTxt.Location = New System.Drawing.Point(12, 81)
         Me.InputTxt.Name = "InputTxt"
         Me.InputTxt.Size = New System.Drawing.Size(374, 20)
@@ -77,8 +77,8 @@ Partial Class Form1
         '
         'OutputTxt
         '
-        Me.OutputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OutputTxt.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.OutputTxt.Location = New System.Drawing.Point(12, 123)
         Me.OutputTxt.Name = "OutputTxt"
         Me.OutputTxt.Size = New System.Drawing.Size(464, 20)
@@ -86,7 +86,7 @@ Partial Class Form1
         '
         'Label3
         '
-        Me.Label3.AutoSize = True
+        Me.Label3.AutoSize = true
         Me.Label3.Location = New System.Drawing.Point(12, 152)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(40, 13)
@@ -95,37 +95,37 @@ Partial Class Form1
         '
         'InputBrowseBtn
         '
-        Me.InputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.InputBrowseBtn.Location = New System.Drawing.Point(473, 78)
         Me.InputBrowseBtn.Name = "InputBrowseBtn"
         Me.InputBrowseBtn.Size = New System.Drawing.Size(84, 23)
         Me.InputBrowseBtn.TabIndex = 5
         Me.InputBrowseBtn.Text = "Browse Folder"
-        Me.InputBrowseBtn.UseVisualStyleBackColor = True
+        Me.InputBrowseBtn.UseVisualStyleBackColor = true
         '
         'OutputBrowseBtn
         '
-        Me.OutputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OutputBrowseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.OutputBrowseBtn.Location = New System.Drawing.Point(482, 123)
         Me.OutputBrowseBtn.Name = "OutputBrowseBtn"
         Me.OutputBrowseBtn.Size = New System.Drawing.Size(75, 23)
         Me.OutputBrowseBtn.TabIndex = 6
         Me.OutputBrowseBtn.Text = "Browse"
-        Me.OutputBrowseBtn.UseVisualStyleBackColor = True
+        Me.OutputBrowseBtn.UseVisualStyleBackColor = true
         '
         'StartBtn
         '
-        Me.StartBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.StartBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.StartBtn.Location = New System.Drawing.Point(356, 152)
         Me.StartBtn.Name = "StartBtn"
         Me.StartBtn.Size = New System.Drawing.Size(204, 37)
         Me.StartBtn.TabIndex = 8
         Me.StartBtn.Text = "Start"
-        Me.StartBtn.UseVisualStyleBackColor = True
+        Me.StartBtn.UseVisualStyleBackColor = true
         '
         'Label4
         '
-        Me.Label4.AutoSize = True
+        Me.Label4.AutoSize = true
         Me.Label4.Location = New System.Drawing.Point(12, 199)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(51, 13)
@@ -134,8 +134,8 @@ Partial Class Form1
         '
         'ProgressBar1
         '
-        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left)  _
+            Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.ProgressBar1.Location = New System.Drawing.Point(15, 216)
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(545, 23)
@@ -144,7 +144,7 @@ Partial Class Form1
         '
         'Label5
         '
-        Me.Label5.AutoSize = True
+        Me.Label5.AutoSize = true
         Me.Label5.Location = New System.Drawing.Point(9, 300)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(119, 13)
@@ -153,17 +153,17 @@ Partial Class Form1
         '
         'Label6
         '
-        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label6.AutoSize = True
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
+        Me.Label6.AutoSize = true
         Me.Label6.Location = New System.Drawing.Point(517, 300)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(43, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.13.0"
+        Me.Label6.Text = "v1.13.1"
         '
         'OpusVersionLabel
         '
-        Me.OpusVersionLabel.AutoSize = True
+        Me.OpusVersionLabel.AutoSize = true
         Me.OpusVersionLabel.Location = New System.Drawing.Point(12, 250)
         Me.OpusVersionLabel.Name = "OpusVersionLabel"
         Me.OpusVersionLabel.Size = New System.Drawing.Size(88, 13)
@@ -180,13 +180,13 @@ Partial Class Form1
         '
         'enableMultithreading
         '
-        Me.enableMultithreading.AutoSize = True
+        Me.enableMultithreading.AutoSize = true
         Me.enableMultithreading.Location = New System.Drawing.Point(82, 172)
         Me.enableMultithreading.Name = "enableMultithreading"
         Me.enableMultithreading.Size = New System.Drawing.Size(121, 17)
         Me.enableMultithreading.TabIndex = 16
         Me.enableMultithreading.Text = "Use Multi-Threading"
-        Me.enableMultithreading.UseVisualStyleBackColor = True
+        Me.enableMultithreading.UseVisualStyleBackColor = true
         '
         'GroupBox1
         '
@@ -197,55 +197,55 @@ Partial Class Form1
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(271, 48)
         Me.GroupBox1.TabIndex = 17
-        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.TabStop = false
         Me.GroupBox1.Text = "Encoder: "
         '
         'EncFFmpeg2
         '
-        Me.EncFFmpeg2.AutoSize = True
+        Me.EncFFmpeg2.AutoSize = true
         Me.EncFFmpeg2.Location = New System.Drawing.Point(180, 19)
         Me.EncFFmpeg2.Name = "EncFFmpeg2"
         Me.EncFFmpeg2.Size = New System.Drawing.Size(83, 17)
         Me.EncFFmpeg2.TabIndex = 2
-        Me.EncFFmpeg2.TabStop = True
+        Me.EncFFmpeg2.TabStop = true
         Me.EncFFmpeg2.Text = "ffmpeg opus"
-        Me.EncFFmpeg2.UseVisualStyleBackColor = True
+        Me.EncFFmpeg2.UseVisualStyleBackColor = true
         '
         'EncFfmpeg1
         '
-        Me.EncFfmpeg1.AutoSize = True
+        Me.EncFfmpeg1.AutoSize = true
         Me.EncFfmpeg1.Location = New System.Drawing.Point(81, 19)
         Me.EncFfmpeg1.Name = "EncFfmpeg1"
         Me.EncFfmpeg1.Size = New System.Drawing.Size(93, 17)
         Me.EncFfmpeg1.TabIndex = 1
-        Me.EncFfmpeg1.TabStop = True
+        Me.EncFfmpeg1.TabStop = true
         Me.EncFfmpeg1.Text = "ffmpeg libopus"
-        Me.EncFfmpeg1.UseVisualStyleBackColor = True
+        Me.EncFfmpeg1.UseVisualStyleBackColor = true
         '
         'EncOpusenc
         '
-        Me.EncOpusenc.AutoSize = True
+        Me.EncOpusenc.AutoSize = true
         Me.EncOpusenc.Location = New System.Drawing.Point(6, 19)
         Me.EncOpusenc.Name = "EncOpusenc"
         Me.EncOpusenc.Size = New System.Drawing.Size(66, 17)
         Me.EncOpusenc.TabIndex = 0
-        Me.EncOpusenc.TabStop = True
+        Me.EncOpusenc.TabStop = true
         Me.EncOpusenc.Text = "opusenc"
-        Me.EncOpusenc.UseVisualStyleBackColor = True
+        Me.EncOpusenc.UseVisualStyleBackColor = true
         '
         'InputFileBtn
         '
-        Me.InputFileBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.InputFileBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.InputFileBtn.Location = New System.Drawing.Point(392, 79)
         Me.InputFileBtn.Name = "InputFileBtn"
         Me.InputFileBtn.Size = New System.Drawing.Size(75, 23)
         Me.InputFileBtn.TabIndex = 18
         Me.InputFileBtn.Text = "Browse File"
-        Me.InputFileBtn.UseVisualStyleBackColor = True
+        Me.InputFileBtn.UseVisualStyleBackColor = true
         '
         'ffmpegVersionLabel
         '
-        Me.ffmpegVersionLabel.AutoSize = True
+        Me.ffmpegVersionLabel.AutoSize = true
         Me.ffmpegVersionLabel.Location = New System.Drawing.Point(12, 265)
         Me.ffmpegVersionLabel.Name = "ffmpegVersionLabel"
         Me.ffmpegVersionLabel.Size = New System.Drawing.Size(79, 13)
@@ -254,18 +254,18 @@ Partial Class Form1
         '
         'GoogleDriveButton
         '
-        Me.GoogleDriveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GoogleDriveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right),System.Windows.Forms.AnchorStyles)
         Me.GoogleDriveButton.Location = New System.Drawing.Point(392, 28)
         Me.GoogleDriveButton.Name = "GoogleDriveButton"
         Me.GoogleDriveButton.Size = New System.Drawing.Size(165, 23)
         Me.GoogleDriveButton.TabIndex = 20
         Me.GoogleDriveButton.Text = "Google Drive"
-        Me.GoogleDriveButton.UseVisualStyleBackColor = True
+        Me.GoogleDriveButton.UseVisualStyleBackColor = true
         '
         'Form1
         '
-        Me.AllowDrop = True
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AllowDrop = true
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(572, 322)
         Me.Controls.Add(Me.GoogleDriveButton)
@@ -287,13 +287,13 @@ Partial Class Form1
         Me.Controls.Add(Me.InputTxt)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
-        Me.MaximizeBox = False
+        Me.MaximizeBox = false
         Me.Name = "Form1"
         Me.Text = "Opus GUI"
-        CType(Me.BitrateNumberBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
-        Me.ResumeLayout(False)
+        CType(Me.BitrateNumberBox,System.ComponentModel.ISupportInitialize).EndInit
+        Me.GroupBox1.ResumeLayout(false)
+        Me.GroupBox1.PerformLayout
+        Me.ResumeLayout(false)
         Me.PerformLayout
 
 End Sub
