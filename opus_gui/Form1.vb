@@ -83,7 +83,11 @@ Public Class Form1
                         If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then
                             ItemsToProcess.Add(File)
                         Else
-                            My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                            If Item_Type = 0 Then
+                                My.Computer.FileSystem.CopyFile(File, OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File))
+                            Else
+                                GoogleDriveForm.drive.DownloadFile(GDriveItemIDs(GDriveItemsToProcess.IndexOf(File)), New IO.FileStream(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File), IO.FileMode.CreateNew))
+                            End If
                         End If
                     End If
                 End If
