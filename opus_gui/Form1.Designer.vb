@@ -287,6 +287,7 @@ Partial Class Form1
         Me.Controls.Add(Me.InputTxt)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
+        Me.KeyPreview = true
         Me.MaximizeBox = false
         Me.Name = "Form1"
         Me.Text = "Opus GUI"
