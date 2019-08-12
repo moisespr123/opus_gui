@@ -42,6 +42,7 @@
                 GoBackButton.Enabled = True
             End If
             Me.Text = "Google Drive Browser - " + drive.currentFolderName
+            FolderName.Text = drive.currentFolderName
         Catch
             MessageBox.Show("Error loading Google Drive contents")
         End Try
@@ -112,5 +113,9 @@
         ElseIf (e.KeyCode = Keys.F5) Then
             PopulateListBoxes(drive, drive.currentFolder, True)
         End If
+    End Sub
+
+    Private Sub FolderName_Click(sender As Object, e As EventArgs) Handles FolderName.Click
+        Clipboard.SetText(drive.currentFolderName)
     End Sub
 End Class
