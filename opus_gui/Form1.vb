@@ -33,6 +33,7 @@ Public Class Form1
         OutputBrowseBtn.Enabled = False
         BitrateNumberBox.Enabled = False
         enableMultithreading.Enabled = False
+        CPUThreads.Enabled = False
         Running = True
     End Sub
     Private Sub StartBtn_Click(sender As Object, e As EventArgs) Handles StartBtn.Click
@@ -120,7 +121,7 @@ Public Class Form1
                     FileAlreadyExist.Add(args(1))
                 End If
             Next
-            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = Environment.ProcessorCount}, tasks.ToArray())
+            Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = CPUThreads.Value}, tasks.ToArray())
         Else
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
                 Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
@@ -147,6 +148,7 @@ Public Class Form1
                                  StartBtn.Enabled = True
                                  BitrateNumberBox.Enabled = True
                                  enableMultithreading.Enabled = True
+                                 CPUThreads.Enabled = True
                                  InputTxt.Enabled = True
                                  OutputTxt.Enabled = True
                                  InputBrowseBtn.Enabled = True
@@ -252,16 +254,21 @@ Public Class Form1
         InputPipe.WaitForConnection()
         Dim ChunkSize As Integer = 16384
         For Bytes As Long = 0 To Input.Length Step 16384
-            If Input.Length - Bytes < ChunkSize Then
-                ChunkSize = Input.Length - Bytes
-            End If
-            Await InputPipe.WriteAsync(Input, Bytes, ChunkSize)
+            Try
+                If Input.Length - Bytes < ChunkSize Then
+                    ChunkSize = Input.Length - Bytes
+                End If
+                Await InputPipe.WriteAsync(Input, Bytes, ChunkSize)
+            Catch
+            End Try
         Next
 
         InputPipe.Flush()
         InputPipe.Dispose()
     End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CPUThreads.Maximum = Environment.ProcessorCount
+        If My.Settings.CPUThreads = 0 Then CPUThreads.Value = CPUThreads.Maximum Else CPUThreads.Value = My.Settings.CPUThreads
         BitrateNumberBox.Value = My.Settings.Bitrate
         enableMultithreading.Checked = My.Settings.Multithreading
         EncFfmpeg1.Checked = My.Settings.EncFfmpeg
@@ -394,4 +401,8 @@ Public Class Form1
         End If
     End Sub
 
+    Private Sub CPUThreads_ValueChanged(sender As Object, e As EventArgs) Handles CPUThreads.ValueChanged
+        My.Settings.CPUThreads = CPUThreads.Value
+        My.Settings.Save()
+    End Sub
 End Class
