@@ -316,7 +316,7 @@ Public Class Form1
             ffmpeg_version = ffmpegProcess.StandardError.ReadLine()
             ffmpegVersionLabel.Text = ffmpeg_version
         Catch ex As Exception
-            ffmpegVersionLabel.Text = "ffmpegenc.exe was not found."
+            ffmpegVersionLabel.Text = "ffmpeg.exe was not found."
             EncFfmpeg1.Enabled = False
             EncFFmpeg2.Enabled = False
             EncOpusenc.Checked = True

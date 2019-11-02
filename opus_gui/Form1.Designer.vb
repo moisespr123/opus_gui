@@ -162,7 +162,7 @@ Partial Class Form1
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(34, 13)
         Me.Label6.TabIndex = 12
-        Me.Label6.Text = "v1.14"
+        Me.Label6.Text = "v1.15"
         '
         'OpusVersionLabel
         '
