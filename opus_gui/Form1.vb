@@ -1,6 +1,7 @@
 ﻿Imports System.IO.Pipes
 
 Public Class Form1
+    Private AudioFormats As New List(Of String)
     Private opusenc_version As String = String.Empty
     Private ffmpeg_version As String = String.Empty
     Public Running As Boolean = False
@@ -52,7 +53,7 @@ Public Class Form1
     End Sub
 
     Private Function GetOutputPath(OutputFolder As String, Item As String) As String
-        Dim outputPath As String = String.Empty
+        Dim outputPath As String
         If Not String.IsNullOrEmpty(OutputFolder) Then
             outputPath = OutputTxt.Text + "\" + IO.Path.GetFileNameWithoutExtension(Item) + ".opus"
         Else
@@ -81,7 +82,8 @@ Public Class Form1
             For Each File In Items
                 If Not String.IsNullOrEmpty(OutputTxt.Text) Then
                     If Not IO.File.Exists(OutputTxt.Text + "\" + My.Computer.FileSystem.GetName(File)) Then
-                        If Not IgnoreFilesWithExtensions.Contains(IO.Path.GetExtension(File)) Then
+                        Dim FileFormat As String = IO.Path.GetExtension(File)
+                        If Not IgnoreFilesWithExtensions.Contains(FileFormat) And AudioFormats.Contains(FileFormat) Then
                             ItemsToProcess.Add(File)
                         Else
                             If Item_Type = 0 Then
@@ -109,7 +111,7 @@ Public Class Form1
                 Else
                     args = {ItemsToProcess(Counter), 0, GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), IO.Path.GetExtension(ItemsToProcess(Counter)), My.Settings.Bitrate}
                 End If
-                If Not IO.File.Exists(args(1)) Then
+                If Not IO.File.Exists(args(2)) Then
                     If EncOpusenc.Checked Then
                         tasks.Add(Function() Run_opus(args, "opusenc", "opusenc"))
                     ElseIf EncFfmpeg1.Checked Then
@@ -118,14 +120,19 @@ Public Class Form1
                         tasks.Add(Function() Run_opus(args, "ffmpeg2", "ffmpeg"))
                     End If
                 Else
-                    FileAlreadyExist.Add(args(1))
+                    FileAlreadyExist.Add(args(2))
                 End If
             Next
             Parallel.Invoke(New ParallelOptions With {.MaxDegreeOfParallelism = CPUThreads.Value}, tasks.ToArray())
         Else
             For Counter As Integer = 0 To ItemsToProcess.Count - 1
-                Dim args As Array = {ItemsToProcess(Counter), GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
-                If Not IO.File.Exists(args(1)) Then
+                Dim args As Array
+                If GoogleDrive Then
+                    args = {GDriveItemIDs(Counter), 1, GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
+                Else
+                    args = {ItemsToProcess(Counter), 0, GetOutputPath(OutputTxt.Text, ItemsToProcess(Counter)), My.Settings.Bitrate}
+                End If
+                If Not IO.File.Exists(args(2)) Then
                     If EncOpusenc.Checked Then
                         Run_opus(args, "opusenc", "opusenc")
                     ElseIf EncFfmpeg1.Checked Then
@@ -134,7 +141,7 @@ Public Class Form1
                         Run_opus(args, "ffmpeg2", "ffmpeg")
                     End If
                 Else
-                    FileAlreadyExist.Add(args(1))
+                    FileAlreadyExist.Add(args(2))
                 End If
             Next
         End If
@@ -262,11 +269,26 @@ Public Class Form1
             Catch
             End Try
         Next
-
-        InputPipe.Flush()
-        InputPipe.Dispose()
+        Try
+            InputPipe.Flush()
+            InputPipe.Dispose()
+        Catch
+        End Try
+    End Sub
+    Private Sub TrimAudioFormats(AudioFormatsList As IEnumerable(Of String))
+        For Each Format As String In AudioFormatsList
+            AudioFormats(AudioFormats.IndexOf(Format)) = Format.Trim
+        Next
     End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If IO.File.Exists("audioformats.txt") Then
+            AudioFormats.AddRange(IO.File.ReadAllText("audioformats.txt").Trim.Split(Environment.NewLine))
+            For item As Integer = 0 To AudioFormats.Count - 1
+                AudioFormats(item) = AudioFormats(item).Trim
+            Next
+        Else
+            AudioFormats.AddRange({".flac", ".wav", ".mp3", ".mp4", ".m4a", ".ogg", ".opus", ".wma"})
+        End If
         CPUThreads.Maximum = Environment.ProcessorCount
         If My.Settings.CPUThreads = 0 Then CPUThreads.Value = CPUThreads.Maximum Else CPUThreads.Value = My.Settings.CPUThreads
         BitrateNumberBox.Value = My.Settings.Bitrate
@@ -322,14 +344,6 @@ Public Class Form1
             EncOpusenc.Checked = True
         End Try
     End Sub
-
-    Private Function OpusEncExists() As Boolean 'Currently not used
-        If IO.File.Exists("opusenc.exe") Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
 
     Private Sub NumericUpDown1_ValueChanged(sender As Object, e As EventArgs) Handles BitrateNumberBox.ValueChanged
         My.Settings.Bitrate = BitrateNumberBox.Value
